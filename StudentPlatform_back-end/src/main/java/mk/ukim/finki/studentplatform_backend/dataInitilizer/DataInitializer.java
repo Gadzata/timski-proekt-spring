@@ -68,26 +68,26 @@ public class DataInitializer {
         studentCourseRepository.save(studentCourse3);
 
         //Events
-        Event event1 = new Event("Event1", new Date(), new Date(), studentCourse1, "Location1");
+        Event event1 = new Event("Event1", new Date(), new Date(),student1, studentCourse1, "Location1",4);
         eventRepository.save(event1);
 
-        Event event2 = new Event("Event2", new Date(), new Date(), studentCourse2, "Location2");
+        Event event2 = new Event("Event2", new Date(), new Date(), student5,studentCourse2, "Location2",5);
         eventRepository.save(event2);
 
-        Event event3 = new Event("Event3", new Date(), new Date(), studentCourse1, "Location3");
+        Event event3 = new Event("Event3", new Date(), new Date(), student2,studentCourse1, "Location3",6);
         eventRepository.save(event3);
 
-        Event event4 = new Event("Event4", new Date(), new Date(), studentCourse2, "Location4");
+        Event event4 = new Event("Event4", new Date(), new Date(), student2,studentCourse2, "Location4",7);
         eventRepository.save(event4);
 
         // add more events with different dates
         Date now = new Date();
         Date tomorrow = new Date(now.getTime() + (1000 * 60 * 60 * 24));
         Date nextWeek = new Date(now.getTime() + (1000 * 60 * 60 * 24 * 7));
-        Event event5 = new Event("Event5", now, tomorrow, studentCourse1, "Location5");
+        Event event5 = new Event("Event5", now, tomorrow,student2, studentCourse1, "Location5",4);
         eventRepository.save(event5);
 
-        Event event6 = new Event("Event6", now, nextWeek, studentCourse2, "Location6");
+        Event event6 = new Event("Event6", now, nextWeek,student2, studentCourse2, "Location6",3);
         eventRepository.save(event6);
 
         //Messages

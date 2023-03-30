@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,15 +19,20 @@ public class Event {
     String name;
     Date dateCreated;
     Date dateScheduled;
+    @OneToOne
+    Student createdBy;
     @ManyToOne
     StudentCourse studentCourse;
     String location;
+    Integer numOfStudents;
 
-    public Event(String name, Date dateCreated, Date dateScheduled, StudentCourse studentCourse, String location) {
+    public Event(String name, Date dateCreated, Date dateScheduled,  Student createdBy, StudentCourse studentCourse, String location, Integer numOfStudents) {
         this.name = name;
         this.dateCreated = dateCreated;
         this.dateScheduled = dateScheduled;
+        this.createdBy = createdBy;
         this.studentCourse = studentCourse;
         this.location = location;
+        this.numOfStudents = numOfStudents;
     }
 }
