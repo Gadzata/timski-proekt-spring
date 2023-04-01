@@ -22,16 +22,16 @@ public class Event {
     @OneToOne
     Student createdBy;
     @ManyToOne
-    StudentCourse studentCourse;
+    Course course;
     String location;
     Integer numOfStudents;
 
-    public Event(String name, Date dateCreated, Date dateScheduled,  Student createdBy, StudentCourse studentCourse, String location, Integer numOfStudents) {
+    public Event(String name, Date dateCreated, Date dateScheduled, Student createdBy, Course course, String location, Integer numOfStudents) {
         this.name = name;
         this.dateCreated = dateCreated;
         this.dateScheduled = dateScheduled;
         this.createdBy = createdBy;
-        this.studentCourse = studentCourse;
+        this.course = course;
         this.location = location;
         this.numOfStudents = numOfStudents;
     }

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -14,14 +16,13 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer messageId;
     @ManyToOne
-    Student student;
-    @ManyToOne
-    Event event;
+    StudentEvent studentEvent;
     String text;
+    Date dateWritten;
 
-    public Message(Student student, Event event, String text) {
-        this.student = student;
-        this.event = event;
+    public Message(StudentEvent studentEvent, String text, Date dateWritten) {
+        this.studentEvent = studentEvent;
         this.text = text;
+        this.dateWritten = dateWritten;
     }
 }

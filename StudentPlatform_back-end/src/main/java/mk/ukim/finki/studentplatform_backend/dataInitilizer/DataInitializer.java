@@ -16,15 +16,18 @@ public class DataInitializer {
     private CourseRepository courseRepository;
     private StudentCourseRepository studentCourseRepository;
     private EventRepository eventRepository;
+    private StudentEventRepository studentEventRepository;
     private MessageRepository messageRepository;
 
 
-    public DataInitializer(StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepository,
-                           EventRepository eventRepository, MessageRepository messageRepository) {
+    public DataInitializer(StudentRepository studentRepository, CourseRepository courseRepository,
+                           StudentCourseRepository studentCourseRepository, EventRepository eventRepository,
+                           StudentEventRepository studentEventRepository, MessageRepository messageRepository) {
         this.studentRepository = studentRepository;
         this.courseRepository = courseRepository;
         this.studentCourseRepository = studentCourseRepository;
         this.eventRepository = eventRepository;
+        this.studentEventRepository = studentEventRepository;
         this.messageRepository = messageRepository;
     }
 
@@ -68,33 +71,47 @@ public class DataInitializer {
         studentCourseRepository.save(studentCourse3);
 
         //Events
-        Event event1 = new Event("Event1", new Date(), new Date(),student1, studentCourse1, "Location1",4);
+        Event event1 = new Event("Event1", new Date(), new Date(),student1, course1, "Location1",4);
         eventRepository.save(event1);
 
-        Event event2 = new Event("Event2", new Date(), new Date(), student5,studentCourse2, "Location2",5);
+        Event event2 = new Event("Event2", new Date(), new Date(), student5, course1, "Location2",5);
         eventRepository.save(event2);
 
-        Event event3 = new Event("Event3", new Date(), new Date(), student2,studentCourse1, "Location3",6);
+        Event event3 = new Event("Event3", new Date(), new Date(), student2, course3, "Location3",6);
         eventRepository.save(event3);
 
-        Event event4 = new Event("Event4", new Date(), new Date(), student2,studentCourse2, "Location4",7);
+        Event event4 = new Event("Event4", new Date(), new Date(), student2, course2, "Location4",7);
         eventRepository.save(event4);
 
         // add more events with different dates
         Date now = new Date();
         Date tomorrow = new Date(now.getTime() + (1000 * 60 * 60 * 24));
         Date nextWeek = new Date(now.getTime() + (1000 * 60 * 60 * 24 * 7));
-        Event event5 = new Event("Event5", now, tomorrow,student2, studentCourse1, "Location5",4);
+        Event event5 = new Event("Event5", now, tomorrow,student2, course3, "Location5",4);
         eventRepository.save(event5);
 
-        Event event6 = new Event("Event6", now, nextWeek,student2, studentCourse2, "Location6",3);
+        Event event6 = new Event("Event6", now, nextWeek,student2, course2, "Location6",3);
         eventRepository.save(event6);
 
-        //Messages
-        Message message1 = messageRepository.save(new Message(student1, event1, "Hello from Student1"));
-        Message message2 = messageRepository.save(new Message(student2, event1, "Hi from Student2"));
-        Message message3 = messageRepository.save(new Message(student2, event2, "Hey from Student2"));
+        // Create a couple of StudentEvent objects
+        StudentEvent studentEvent1 = new StudentEvent(student1, event1);
+        studentEventRepository.save(studentEvent1);
+        StudentEvent studentEvent2 = new StudentEvent(student2, event1);
+        studentEventRepository.save(studentEvent2);
+        StudentEvent studentEvent3 = new StudentEvent(student3, event1);
+        studentEventRepository.save(studentEvent3);
+        StudentEvent studentEvent4 = new StudentEvent(student2, event6);
+        studentEventRepository.save(studentEvent4);
 
+        //Messages
+        Message message1 = messageRepository.save(new Message(studentEvent1, "Hello from Student1", new Date()));
+        Message message2 = messageRepository.save(new Message(studentEvent1, "Hi from Student2",new Date()));
+        Message message3 = messageRepository.save(new Message(studentEvent2,"Hey from Student2",new Date()));
+        Message message4 = messageRepository.save(new Message(studentEvent3, "Good luck from Student3", new Date()));
+        Message message5 = messageRepository.save(new Message(studentEvent3, "Wishing you success", new Date()));
+        Message message6 = messageRepository.save(new Message(studentEvent3, "You can do it", new Date()));
+        Message message7 = messageRepository.save(new Message(studentEvent2, "How are you feeling", new Date()));
+        Message message8 = messageRepository.save(new Message(studentEvent2, "Are you ready", new Date()));
     }
 }
 
