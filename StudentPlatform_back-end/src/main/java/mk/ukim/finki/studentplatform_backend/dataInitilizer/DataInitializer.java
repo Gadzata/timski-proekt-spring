@@ -35,19 +35,19 @@ public class DataInitializer {
     public void initData() {
 
         //Students
-        Student student1 = new Student("Student1", "Student1Surname", "student1@students.finki.ukim.mk");
+        Student student1 = new Student("Student1", "Student1Surname", "student1@students.finki.ukim.mk", 0);
         studentRepository.save(student1);
 
-        Student student2 = new Student("Student2", "Student2Surname", "student2@students.finki.ukim.mk");
+        Student student2 = new Student("Student2", "Student2Surname", "student2@students.finki.ukim.mk", 5);
         studentRepository.save(student2);
 
-        Student student3 = new Student("Student3", "Student3Surname", "student3@students.finki.ukim.mk");
+        Student student3 = new Student("Student3", "Student3Surname", "student3@students.finki.ukim.mk", 7);
         studentRepository.save(student3);
 
-        Student student4 = new Student("Student4", "Student4Surname", "student4@students.finki.ukim.mk");
+        Student student4 = new Student("Student4", "Student4Surname", "student4@students.finki.ukim.mk", 10);
         studentRepository.save(student4);
 
-        Student student5 = new Student("Student5", "Student5Surname", "student5@students.finki.ukim.mk");
+        Student student5 = new Student("Student5", "Student5Surname", "student5@students.finki.ukim.mk", 15);
         studentRepository.save(student5);
 
         //Courses
