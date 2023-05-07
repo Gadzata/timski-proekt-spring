@@ -17,8 +17,12 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer courseId;
     String name;
+    Integer participants;
+    Boolean done;
 
     public Course(String name) {
         this.name = name;
+        this.participants = 0;
+        this.done = false;
     }
 }
