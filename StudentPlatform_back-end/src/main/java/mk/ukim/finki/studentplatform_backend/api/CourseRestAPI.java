@@ -80,4 +80,19 @@ public class CourseRestAPI {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + note.getName() + "\"")
                 .body(note.getData());
     }
+
+    @PostMapping
+    public Course createCourse(@RequestBody Course course) {
+        return courseService.createCourse(course);
+    }
+
+    @PutMapping("/{id}")
+    public Course updateCourse(@PathVariable Integer id, @RequestBody Course course) {
+        return courseService.updateCourse(id, course);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCourse(@PathVariable Integer id) {
+        courseService.deleteCourse(id);
+    }
 }
