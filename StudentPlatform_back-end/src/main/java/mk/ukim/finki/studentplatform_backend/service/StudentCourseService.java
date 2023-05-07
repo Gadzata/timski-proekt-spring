@@ -27,6 +27,7 @@ public class StudentCourseService {
 
     public StudentCourse saveStudentCourse(Student student, Course course) {
         StudentCourse studentCourse = new StudentCourse(student, course);
+        student.setPoints(student.getPoints()+1);
         return repository.save(studentCourse);
     }
 
