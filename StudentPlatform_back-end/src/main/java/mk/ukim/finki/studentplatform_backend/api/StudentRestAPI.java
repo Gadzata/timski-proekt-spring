@@ -75,4 +75,7 @@ public class StudentRestAPI {
         List<Course> courses = studentCourseService.getCoursesByStudent(student);
         return ResponseEntity.ok(courses);
     }
+
+
+
 }

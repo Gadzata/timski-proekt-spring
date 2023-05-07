@@ -22,6 +22,6 @@ public class Student {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.points = points;
+        this.points = 0;
     }
 }

@@ -40,10 +40,10 @@ public class CourseRestAPI {
     }
 
     @PostMapping("/{id}/upload")
-    public ResponseEntity<ResponseMessage> uploadFile(@PathVariable Integer id, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<ResponseMessage> uploadFile(@PathVariable Integer courseId, @PathVariable Integer studentId, @RequestParam("file") MultipartFile file) {
         String message = "";
         try {
-            noteService.store(file, id);
+            noteService.store(file, courseId, studentId);
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
