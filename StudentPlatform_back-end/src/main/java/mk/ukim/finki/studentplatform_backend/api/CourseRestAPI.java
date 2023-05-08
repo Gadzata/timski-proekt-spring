@@ -32,12 +32,12 @@ public class CourseRestAPI {
         return this.courseService.getAllCourses();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Course> findById(@PathVariable Integer id) {
-        Optional<Course> course = this.courseService.findCourseById(id);
-        return course.map(c -> ResponseEntity.ok().body(c))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Course> findById(@PathVariable Integer id) {
+//        Optional<Course> course = this.courseService.findCourseById(id);
+//        return course.map(c -> ResponseEntity.ok().body(c))
+//                .orElseGet(() -> ResponseEntity.notFound().build());
+//    }
 
     @PostMapping("/{id}/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@PathVariable Integer courseId, @PathVariable Integer studentId, @RequestParam("file") MultipartFile file) {

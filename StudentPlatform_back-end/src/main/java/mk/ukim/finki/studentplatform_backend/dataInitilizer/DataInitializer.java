@@ -51,25 +51,25 @@ public class DataInitializer {
         studentRepository.save(student5);
 
         //Courses
-        Course course1 = new Course("Algorithms and data structures");
+        Course course1 = new Course("Algorithms and data structures",5,false);
         courseRepository.save(course1);
 
         Course course2 = new Course("Design of interaction computer-human");
         courseRepository.save(course2);
 
-        Course course3 = new Course("Team project");
+        Course course3 = new Course("Team project",10,false);
         courseRepository.save(course3);
 
-        Course course4 = new Course("Object oriented programming");
+        Course course4 = new Course("Object oriented programming",50,true);
         courseRepository.save(course4);
 
         Course course5 = new Course("Programming of video games");
         courseRepository.save(course5);
 
-        Course course6 = new Course("Web based systems");
+        Course course6 = new Course("Web based systems",20,false);
         courseRepository.save(course6);
 
-        Course course7 = new Course("Digital libraries");
+        Course course7 = new Course("Digital libraries",33,true);
         courseRepository.save(course7);
 
         Course course8 = new Course("Media and communications");

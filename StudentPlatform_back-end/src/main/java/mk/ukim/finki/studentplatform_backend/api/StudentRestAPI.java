@@ -19,8 +19,13 @@ public class StudentRestAPI {
     private StudentService studentService;
     private StudentCourseService studentCourseService;
 
+    public StudentRestAPI(StudentService studentService, StudentCourseService studentCourseService) {
+        this.studentService = studentService;
+        this.studentCourseService = studentCourseService;
+    }
+
     // Retrieve all students
-    @GetMapping("/")
+    @GetMapping
     public List<Student> getAllStudents() {
         return studentService.getAllStudents();
     }
@@ -64,7 +69,7 @@ public class StudentRestAPI {
 //    public ResponseEntity<List<Course>> showCoursesForStudents(Authentication authentication) {
 //        String username = authentication.getName();
 
-    @GetMapping
+    @GetMapping("/myCourses")
     public ResponseEntity<List<Course>> showCoursesForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         String username = (session != null) ? (String) session.getAttribute("username") : null;
