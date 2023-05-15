@@ -1,6 +1,7 @@
 package mk.ukim.finki.studentplatform_backend.service;
 
 import mk.ukim.finki.studentplatform_backend.models.*;
+import mk.ukim.finki.studentplatform_backend.repository.EventRepository;
 import mk.ukim.finki.studentplatform_backend.repository.StudentEventRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,14 @@ public class StudentEventService {
 
     public StudentEvent createStudentEvent(Student student, Event event) {
         StudentEvent studentEvent = new StudentEvent(student, event);
+        event.setNumOfStudents(event.getNumOfStudents()+1);
         return studentEventRepository.save(studentEvent);
     }
 
     public void deleteStudentEvent(Integer id) {
+        StudentEvent studentEvent = studentEventRepository.findById(id).get();
+        Event event = studentEvent.getEvent();
+        event.setNumOfStudents(event.getNumOfStudents()-1);
         studentEventRepository.deleteById(id);
     }
 

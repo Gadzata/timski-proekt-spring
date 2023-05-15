@@ -23,6 +23,8 @@ public class CourseService {
 
     public Optional<Course> findCourseById(Integer id) { return courseRepository.findById(id); }
 
+    public Course findCourseByName(String name){ return courseRepository.findByName(name); }
+
     public Course createCourse(Course course) {
         return courseRepository.save(course);
     }

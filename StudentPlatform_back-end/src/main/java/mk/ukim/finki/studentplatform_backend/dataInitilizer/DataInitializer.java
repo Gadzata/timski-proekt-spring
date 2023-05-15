@@ -96,6 +96,10 @@ public class DataInitializer {
         Course course15 = new Course("Marketing");
         courseRepository.save(course15);
 
+        //for random studying, every student has this course automatically
+        Course course16 = new Course("Random");
+        courseRepository.save(course16);
+
         //StudentCourse
         StudentCourse studentCourse1 = new StudentCourse(student1, course1);
         studentCourseRepository.save(studentCourse1);

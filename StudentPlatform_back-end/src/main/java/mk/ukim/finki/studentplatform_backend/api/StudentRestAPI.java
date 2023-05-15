@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import mk.ukim.finki.studentplatform_backend.models.Course;
 import mk.ukim.finki.studentplatform_backend.models.Student;
+import mk.ukim.finki.studentplatform_backend.service.CourseService;
 import mk.ukim.finki.studentplatform_backend.service.StudentCourseService;
 import mk.ukim.finki.studentplatform_backend.service.StudentEventService;
 import mk.ukim.finki.studentplatform_backend.service.StudentService;
@@ -20,6 +21,7 @@ public class StudentRestAPI {
     private StudentService studentService;
     private StudentCourseService studentCourseService;
     private StudentEventService studentEventService;
+    private CourseService courseService;
 
     // Retrieve all students
     @GetMapping("/")
@@ -40,8 +42,11 @@ public class StudentRestAPI {
     }
 
     // Create a new student
+    //for every new student, the random course is added to their course list
     @PostMapping("/")
     public Student createStudent(@RequestBody Student student) {
+        Course random = courseService.findCourseByName("Random");
+        studentCourseService.saveStudentCourse(student,random);
         return studentService.createStudent(student);
     }
 

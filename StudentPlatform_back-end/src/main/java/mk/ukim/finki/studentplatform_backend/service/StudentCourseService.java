@@ -1,5 +1,6 @@
 package mk.ukim.finki.studentplatform_backend.service;
 
+import mk.ukim.finki.studentplatform_backend.exception.StudentCourseException;
 import mk.ukim.finki.studentplatform_backend.models.Course;
 import mk.ukim.finki.studentplatform_backend.models.Student;
 import mk.ukim.finki.studentplatform_backend.models.StudentCourse;
@@ -26,6 +27,11 @@ public class StudentCourseService {
     }
 
     public StudentCourse saveStudentCourse(Student student, Course course) {
+        List<Course> courseList = this.getCoursesByStudent(student);
+
+        if(courseList.size() >= 13 && courseList.contains(course)) {
+            throw new StudentCourseException();
+        }
         StudentCourse studentCourse = new StudentCourse(student, course);
         return repository.save(studentCourse);
     }
