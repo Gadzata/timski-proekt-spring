@@ -27,7 +27,7 @@ public class CourseService {
 
     public Course findCourseByName(String name){ return courseRepository.findByName(name); }
 
-    public Course createCourse(Course course) {
+
     public Course createCourse(String name, Integer participants, Boolean done) {
         Course course = new Course(name, participants, done);
         return courseRepository.save(course);
