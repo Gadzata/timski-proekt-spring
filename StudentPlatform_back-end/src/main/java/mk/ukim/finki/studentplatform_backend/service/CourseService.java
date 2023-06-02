@@ -21,19 +21,24 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public Optional<Course> findCourseById(Integer id) { return courseRepository.findById(id); }
+    public Course getCourseById(Integer id) {
+        return courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Course not found"));
+    }
 
-    public Course createCourse(Course course) {
+    public Course createCourse(String name, Integer participants, Boolean done) {
+        Course course = new Course(name, participants, done);
         return courseRepository.save(course);
     }
 
-    public Course updateCourse(Integer id, Course course) {
-        Course existingCourse = courseRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
-        existingCourse.setName(course.getName());
+    public Course updateCourse(Integer id, String name, Integer participants, Boolean done) {
+        Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Course not found"));
+        existingCourse.setName(name);
+        existingCourse.setParticipants(participants);
+        existingCourse.setDone(done);
 
         return courseRepository.save(existingCourse);
     }
+
 
     public void deleteCourse(int id) {
         courseRepository.deleteById(id);

@@ -126,7 +126,7 @@ public class DataInitializer {
         Event event5 = new Event("Event5", now, tomorrow,student2, course3, "Location5",4);
         eventRepository.save(event5);
 
-        Event event6 = new Event("Event6", now, nextWeek,student2, course2, "Location6",3);
+        Event event6 = new Event("Event6", now, nextWeek,student2, course2, "https://meet.google.com/niq-gpay-yxy",3);
         eventRepository.save(event6);
 
         // Create a couple of StudentEvent objects

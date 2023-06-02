@@ -1,8 +1,10 @@
 package mk.ukim.finki.studentplatform_backend.api;
 
+import jakarta.persistence.EntityNotFoundException;
 import mk.ukim.finki.studentplatform_backend.message.ResponseFile;
 import mk.ukim.finki.studentplatform_backend.message.ResponseMessage;
 import mk.ukim.finki.studentplatform_backend.models.Course;
+import mk.ukim.finki.studentplatform_backend.models.Event;
 import mk.ukim.finki.studentplatform_backend.models.Note;
 import mk.ukim.finki.studentplatform_backend.service.CourseService;
 import mk.ukim.finki.studentplatform_backend.service.NoteService;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
@@ -21,10 +24,15 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/courses")
 public class CourseRestAPI {
-    @Autowired
+
     private CourseService courseService;
-    @Autowired
+
     private NoteService noteService;
+
+    public CourseRestAPI(CourseService courseService, NoteService noteService) {
+        this.courseService = courseService;
+        this.noteService = noteService;
+    }
 
     //when a student clicks 'add new course' from the home page
     @GetMapping
@@ -32,12 +40,52 @@ public class CourseRestAPI {
         return this.courseService.getAllCourses();
     }
 
-//    @GetMapping("/{id}")
+//    @GetMapping("/{courseId}")
+//    public Course getCourseById(@PathVariable("courseId") Integer courseId) {
+//        return courseService.getCourseById(courseId);
+//    }
+
+    @GetMapping("/{id}")
+    public Course getCourseById(@PathVariable Integer id) {
+        try {
+            return courseService.getCourseById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    //    @GetMapping("/{id}")
 //    public ResponseEntity<Course> findById(@PathVariable Integer id) {
 //        Optional<Course> course = this.courseService.findCourseById(id);
 //        return course.map(c -> ResponseEntity.ok().body(c))
 //                .orElseGet(() -> ResponseEntity.notFound().build());
 //    }
+    @PostMapping
+    public Course createCourse(@RequestParam String name,
+                               @RequestParam Integer participants,
+                               @RequestParam Boolean done) {
+        return courseService.createCourse(name, participants, done);
+    }
+
+
+    @PutMapping("/{courseId}")
+    public void updateCourse(@PathVariable("courseId") Integer courseId, @RequestParam String name, @RequestParam Integer participants, @RequestParam Boolean done) {
+        try {
+            courseService.updateCourse(courseId, name, participants, done);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{courseId}")
+    public void deleteCourse(@PathVariable("courseId") Integer courseId) {
+        try {
+            Course course = courseService.getCourseById(courseId);
+            courseService.deleteCourse(courseId);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 
     @PostMapping("/{id}/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@PathVariable Integer courseId, @PathVariable Integer studentId, @RequestParam("file") MultipartFile file) {
@@ -81,18 +129,5 @@ public class CourseRestAPI {
                 .body(note.getData());
     }
 
-    @PostMapping
-    public Course createCourse(@RequestBody Course course) {
-        return courseService.createCourse(course);
-    }
 
-    @PutMapping("/{id}")
-    public Course updateCourse(@PathVariable Integer id, @RequestBody Course course) {
-        return courseService.updateCourse(id, course);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteCourse(@PathVariable Integer id) {
-        courseService.deleteCourse(id);
-    }
 }
