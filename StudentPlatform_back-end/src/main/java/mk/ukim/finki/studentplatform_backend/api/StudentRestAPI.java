@@ -18,6 +18,8 @@ public class StudentRestAPI {
 
     private StudentService studentService;
     private StudentCourseService studentCourseService;
+    private StudentEventService studentEventService;
+    private CourseService courseService;
 
     public StudentRestAPI(StudentService studentService, StudentCourseService studentCourseService) {
         this.studentService = studentService;
@@ -43,8 +45,11 @@ public class StudentRestAPI {
     }
 
     // Create a new student
+    //for every new student, the random course is added to their course list
     @PostMapping("/")
     public Student createStudent(@RequestBody Student student) {
+        Course random = courseService.findCourseByName("Random");
+        studentCourseService.saveStudentCourse(student,random);
         return studentService.createStudent(student);
     }
 
@@ -81,6 +86,17 @@ public class StudentRestAPI {
         return ResponseEntity.ok(courses);
     }
 
+    //returns progress as percentage
+    @GetMapping("/{studentId}/weekly-progress")
+    public ResponseEntity<Double> getWeeklyProgress(HttpServletRequest request) {
+        // Fetch the student object based on the provided studentId
 
+        HttpSession session = request.getSession(false);
+        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        Student student = studentService.getStudentByEmail(username);
 
+        double weeklyProgress = studentEventService.calculateWeeklyProgress(student);
+
+        return ResponseEntity.ok(weeklyProgress);
+    }
 }
