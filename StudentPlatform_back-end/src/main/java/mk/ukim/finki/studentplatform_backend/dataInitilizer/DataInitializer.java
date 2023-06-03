@@ -35,41 +35,41 @@ public class DataInitializer {
     public void initData() {
 
         //Students
-        Student student1 = new Student("Student1", "Student1Surname", "student1@students.finki.ukim.mk");
+        Student student1 = new Student("Student1", "Student1Surname", "student1@students.finki.ukim.mk", 0);
         studentRepository.save(student1);
 
-        Student student2 = new Student("Student2", "Student2Surname", "student2@students.finki.ukim.mk");
+        Student student2 = new Student("Student2", "Student2Surname", "student2@students.finki.ukim.mk", 5);
         studentRepository.save(student2);
 
-        Student student3 = new Student("Student3", "Student3Surname", "student3@students.finki.ukim.mk");
+        Student student3 = new Student("Student3", "Student3Surname", "student3@students.finki.ukim.mk", 7);
         studentRepository.save(student3);
 
-        Student student4 = new Student("Student4", "Student4Surname", "student4@students.finki.ukim.mk");
+        Student student4 = new Student("Student4", "Student4Surname", "student4@students.finki.ukim.mk", 10);
         studentRepository.save(student4);
 
-        Student student5 = new Student("Student5", "Student5Surname", "student5@students.finki.ukim.mk");
+        Student student5 = new Student("Student5", "Student5Surname", "student5@students.finki.ukim.mk", 15);
         studentRepository.save(student5);
 
         //Courses
-        Course course1 = new Course("Algorithms and data structures");
+        Course course1 = new Course("Algorithms and data structures",5,false);
         courseRepository.save(course1);
 
         Course course2 = new Course("Design of interaction computer-human");
         courseRepository.save(course2);
 
-        Course course3 = new Course("Team project");
+        Course course3 = new Course("Team project",10,false);
         courseRepository.save(course3);
 
-        Course course4 = new Course("Object oriented programming");
+        Course course4 = new Course("Object oriented programming",50,true);
         courseRepository.save(course4);
 
         Course course5 = new Course("Programming of video games");
         courseRepository.save(course5);
 
-        Course course6 = new Course("Web based systems");
+        Course course6 = new Course("Web based systems",20,false);
         courseRepository.save(course6);
 
-        Course course7 = new Course("Digital libraries");
+        Course course7 = new Course("Digital libraries",33,true);
         courseRepository.save(course7);
 
         Course course8 = new Course("Media and communications");
@@ -130,7 +130,7 @@ public class DataInitializer {
         Event event5 = new Event("Event5", now, tomorrow,student2, course3, "Location5",4);
         eventRepository.save(event5);
 
-        Event event6 = new Event("Event6", now, nextWeek,student2, course2, "Location6",3);
+        Event event6 = new Event("Event6", now, nextWeek,student2, course2, "https://meet.google.com/niq-gpay-yxy",3);
         eventRepository.save(event6);
 
         // Create a couple of StudentEvent objects

@@ -16,10 +16,12 @@ public class Student {
     String name;
     String surname;
     String email;
+    Integer points;
 
-    public Student(String name, String surname, String email) {
+    public Student(String name, String surname, String email, Integer points) {
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.points = 0;
     }
 }
