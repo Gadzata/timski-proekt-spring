@@ -4,7 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import mk.ukim.finki.studentplatform_backend.models.Course;
 import mk.ukim.finki.studentplatform_backend.models.Student;
+import mk.ukim.finki.studentplatform_backend.service.CourseService;
 import mk.ukim.finki.studentplatform_backend.service.StudentCourseService;
+import mk.ukim.finki.studentplatform_backend.service.StudentEventService;
 import mk.ukim.finki.studentplatform_backend.service.StudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +20,16 @@ public class StudentRestAPI {
 
     private StudentService studentService;
     private StudentCourseService studentCourseService;
+    private StudentEventService studentEventService;
+    private CourseService courseService;
+
+    public StudentRestAPI(StudentService studentService, StudentCourseService studentCourseService) {
+        this.studentService = studentService;
+        this.studentCourseService = studentCourseService;
+    }
 
     // Retrieve all students
-    @GetMapping("/")
+    @GetMapping
     public List<Student> getAllStudents() {
         return studentService.getAllStudents();
     }
@@ -38,8 +47,11 @@ public class StudentRestAPI {
     }
 
     // Create a new student
+    //for every new student, the random course is added to their course list
     @PostMapping("/")
     public Student createStudent(@RequestBody Student student) {
+        Course random = courseService.findCourseByName("Random");
+        studentCourseService.saveStudentCourse(student,random);
         return studentService.createStudent(student);
     }
 
@@ -64,7 +76,7 @@ public class StudentRestAPI {
 //    public ResponseEntity<List<Course>> showCoursesForStudents(Authentication authentication) {
 //        String username = authentication.getName();
 
-    @GetMapping
+    @GetMapping("/myCourses")
     public ResponseEntity<List<Course>> showCoursesForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         String username = (session != null) ? (String) session.getAttribute("username") : null;
@@ -76,6 +88,17 @@ public class StudentRestAPI {
         return ResponseEntity.ok(courses);
     }
 
+    //returns progress as percentage
+    @GetMapping("/{studentId}/weekly-progress")
+    public ResponseEntity<Double> getWeeklyProgress(HttpServletRequest request) {
+        // Fetch the student object based on the provided studentId
 
+        HttpSession session = request.getSession(false);
+        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        Student student = studentService.getStudentByEmail(username);
 
+        double weeklyProgress = studentEventService.calculateWeeklyProgress(student);
+
+        return ResponseEntity.ok(weeklyProgress);
+    }
 }

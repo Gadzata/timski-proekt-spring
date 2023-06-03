@@ -1,9 +1,12 @@
 package mk.ukim.finki.studentplatform_backend.service;
 
 import mk.ukim.finki.studentplatform_backend.models.*;
+import mk.ukim.finki.studentplatform_backend.repository.EventRepository;
 import mk.ukim.finki.studentplatform_backend.repository.StudentEventRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +26,14 @@ public class StudentEventService {
 
     public StudentEvent createStudentEvent(Student student, Event event) {
         StudentEvent studentEvent = new StudentEvent(student, event);
+        event.setNumOfStudents(event.getNumOfStudents()+1);
         return studentEventRepository.save(studentEvent);
     }
 
     public void deleteStudentEvent(Integer id) {
+        StudentEvent studentEvent = studentEventRepository.findById(id).get();
+        Event event = studentEvent.getEvent();
+        event.setNumOfStudents(event.getNumOfStudents()-1);
         studentEventRepository.deleteById(id);
     }
 
@@ -46,6 +53,20 @@ public class StudentEventService {
 
     public List<StudentEvent> getStudentEventByStudent(Student student) {
         return studentEventRepository.findStudentEventByStudent(student);
+    }
+
+    public double calculateWeeklyProgress(Student student) {
+        Date today = new Date();
+        Date oneWeekAgo = new Date(today.getTime() - (1000 * 60 * 60 * 24 * 7));
+
+        List<StudentEvent> attendedEvents = studentEventRepository.findByStudentAndEvent_DateScheduledBetween(student, oneWeekAgo, today);
+
+        int attendedEventCount = attendedEvents.size();
+        int requiredEventCount = 4;
+
+        double progress = (double) attendedEventCount / requiredEventCount * 100;
+
+        return progress > 100 ? 100 : progress;
     }
 
 }

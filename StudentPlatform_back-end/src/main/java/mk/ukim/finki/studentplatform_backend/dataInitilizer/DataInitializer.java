@@ -51,25 +51,25 @@ public class DataInitializer {
         studentRepository.save(student5);
 
         //Courses
-        Course course1 = new Course("Algorithms and data structures");
+        Course course1 = new Course("Algorithms and data structures",5,false);
         courseRepository.save(course1);
 
         Course course2 = new Course("Design of interaction computer-human");
         courseRepository.save(course2);
 
-        Course course3 = new Course("Team project");
+        Course course3 = new Course("Team project",10,false);
         courseRepository.save(course3);
 
-        Course course4 = new Course("Object oriented programming");
+        Course course4 = new Course("Object oriented programming",50,true);
         courseRepository.save(course4);
 
         Course course5 = new Course("Programming of video games");
         courseRepository.save(course5);
 
-        Course course6 = new Course("Web based systems");
+        Course course6 = new Course("Web based systems",20,false);
         courseRepository.save(course6);
 
-        Course course7 = new Course("Digital libraries");
+        Course course7 = new Course("Digital libraries",33,true);
         courseRepository.save(course7);
 
         Course course8 = new Course("Media and communications");
@@ -95,6 +95,10 @@ public class DataInitializer {
 
         Course course15 = new Course("Marketing");
         courseRepository.save(course15);
+
+        //for random studying, every student has this course automatically
+        Course course16 = new Course("Random");
+        courseRepository.save(course16);
 
         //StudentCourse
         StudentCourse studentCourse1 = new StudentCourse(student1, course1);
@@ -126,7 +130,7 @@ public class DataInitializer {
         Event event5 = new Event("Event5", now, tomorrow,student2, course3, "Location5",4);
         eventRepository.save(event5);
 
-        Event event6 = new Event("Event6", now, nextWeek,student2, course2, "Location6",3);
+        Event event6 = new Event("Event6", now, nextWeek,student2, course2, "https://meet.google.com/niq-gpay-yxy",3);
         eventRepository.save(event6);
 
         // Create a couple of StudentEvent objects
