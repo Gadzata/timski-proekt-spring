@@ -55,6 +55,10 @@ public class StudentEventService {
         return studentEventRepository.findStudentEventByStudent(student);
     }
 
+    public StudentEvent findStudentEventByEventIdAndStudentId(Integer studentId, Integer eventId) {
+        return studentEventRepository.findStudentEventByEvent_EventIdAndStudent_StudentId(studentId, eventId);
+    }
+
     public double calculateWeeklyProgress(Student student) {
         Date today = new Date();
         Date oneWeekAgo = new Date(today.getTime() - (1000 * 60 * 60 * 24 * 7));

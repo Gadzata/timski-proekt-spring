@@ -1,10 +1,15 @@
 package mk.ukim.finki.studentplatform_backend.api;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import mk.ukim.finki.studentplatform_backend.models.Event;
+import mk.ukim.finki.studentplatform_backend.models.Message;
+import mk.ukim.finki.studentplatform_backend.models.StudentEvent;
 import mk.ukim.finki.studentplatform_backend.service.EventService;
+import mk.ukim.finki.studentplatform_backend.service.MessageService;
+import mk.ukim.finki.studentplatform_backend.service.StudentEventService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,9 +21,13 @@ import java.util.List;
 public class EventRestApi {
 
     private final EventService eventService;
+    private final MessageService messageService;
+    private final StudentEventService studentEventService;
 
-    public EventRestApi(EventService eventService) {
+    public EventRestApi(EventService eventService, MessageService messageService, StudentEventService studentEventService) {
         this.eventService = eventService;
+        this.messageService = messageService;
+        this.studentEventService = studentEventService;
     }
 
     @GetMapping
@@ -72,5 +81,20 @@ public class EventRestApi {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    /// Discussion section
+
+    @PostMapping("/create")
+    public Message createMessage(@RequestParam StudentEvent studentEvent, @RequestParam String text, @RequestParam java.sql.Date dateWritten) {
+        return messageService.createMessage(studentEvent, text, dateWritten);
+    }
+
+    @GetMapping("/{eventId}/discussion")
+    public List<Message> getAllByStudentEventOrderByDateWritten (@PathVariable("eventId") Integer eventId, HttpServletRequest request){
+        // TODO: GET STUDENT ID FROM SESSION
+        HttpSession session = request.getSession();
+        Integer studentId = (Integer) session.getAttribute("studentId");
+                return messageService.getAllByStudentEventOrderByDateWritten(this.studentEventService.findStudentEventByEventIdAndStudentId(studentId, eventId));
     }
 }
