@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import mk.ukim.finki.studentplatform_backend.models.*;
 import mk.ukim.finki.studentplatform_backend.repository.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -19,35 +20,48 @@ public class DataInitializer {
     private StudentEventRepository studentEventRepository;
     private MessageRepository messageRepository;
 
+    private UserRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder;
 
     public DataInitializer(StudentRepository studentRepository, CourseRepository courseRepository,
                            StudentCourseRepository studentCourseRepository, EventRepository eventRepository,
-                           StudentEventRepository studentEventRepository, MessageRepository messageRepository) {
+                           StudentEventRepository studentEventRepository, MessageRepository messageRepository,
+                           UserRepository userRepository,BCryptPasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
         this.courseRepository = courseRepository;
         this.studentCourseRepository = studentCourseRepository;
         this.eventRepository = eventRepository;
         this.studentEventRepository = studentEventRepository;
         this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
     public void initData() {
 
+        //Users
+        User user = new User("user", passwordEncoder.encode("password"));
+        User user2 = new User("user2", passwordEncoder.encode("password2"));
+        User user3 =  new User("user3", passwordEncoder.encode("password3"));
+        User user4 = new User("user4", passwordEncoder.encode("password4"));
+        User user5 = new User("user5", passwordEncoder.encode("password5"));
+
         //Students
-        Student student1 = new Student("Student1", "Student1Surname", "student1@students.finki.ukim.mk", 0);
+        Student student1 = new Student(user.getUsername(),user.getPassword(),"Student1", "Student1Surname", "student1@students.finki.ukim.mk", 0);
         studentRepository.save(student1);
 
-        Student student2 = new Student("Student2", "Student2Surname", "student2@students.finki.ukim.mk", 5);
+
+        Student student2 = new Student(user2.getUsername(),user2.getPassword(),"Student2", "Student2Surname", "student2@students.finki.ukim.mk", 5);
         studentRepository.save(student2);
 
-        Student student3 = new Student("Student3", "Student3Surname", "student3@students.finki.ukim.mk", 7);
+        Student student3 = new Student(user3.getUsername(), user3.getPassword(), "Student3", "Student3Surname", "student3@students.finki.ukim.mk", 7);
         studentRepository.save(student3);
 
-        Student student4 = new Student("Student4", "Student4Surname", "student4@students.finki.ukim.mk", 10);
+        Student student4 = new Student(user4.getUsername(), user4.getPassword(), "Student4", "Student4Surname", "student4@students.finki.ukim.mk", 10);
         studentRepository.save(student4);
 
-        Student student5 = new Student("Student5", "Student5Surname", "student5@students.finki.ukim.mk", 15);
+        Student student5 = new Student(user5.getUsername(), user5.getPassword(), "Student5", "Student5Surname", "student5@students.finki.ukim.mk", 15);
         studentRepository.save(student5);
 
         //Courses
@@ -152,6 +166,9 @@ public class DataInitializer {
         Message message6 = messageRepository.save(new Message(studentEvent3, "You can do it", new Date()));
         Message message7 = messageRepository.save(new Message(studentEvent2, "How are you feeling", new Date()));
         Message message8 = messageRepository.save(new Message(studentEvent2, "Are you ready", new Date()));
+
+
+
     }
 }
 

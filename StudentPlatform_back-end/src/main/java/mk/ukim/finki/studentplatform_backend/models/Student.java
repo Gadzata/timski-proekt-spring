@@ -9,16 +9,17 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer studentId;
+public class Student extends User {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    Integer studentId;
     String name;
     String surname;
     String email;
     Integer points;
 
-    public Student(String name, String surname, String email, Integer points) {
+    public Student(String username, String password,String name, String surname, String email, Integer points) {
+        super(username, password);
         this.name = name;
         this.surname = surname;
         this.email = email;

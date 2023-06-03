@@ -79,7 +79,7 @@ public class StudentRestAPI {
     @GetMapping("/myCourses")
     public ResponseEntity<List<Course>> showCoursesForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        String username = (session != null) ? (String) session.getAttribute("user") : null;
         if (username == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
