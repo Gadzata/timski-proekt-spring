@@ -25,4 +25,10 @@ public class Course {
         this.participants = 0;
         this.done = false;
     }
+
+    public Course(String name, Integer participants, Boolean done) {
+        this.name = name;
+        this.participants = participants;
+        this.done = done;
+    }
 }

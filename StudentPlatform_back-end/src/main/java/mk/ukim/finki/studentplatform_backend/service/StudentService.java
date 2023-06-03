@@ -11,6 +11,10 @@ import java.util.Optional;
 public class StudentService {
     private StudentRepository studentRepository;
 
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
     // Retrieve all students
     public List<Student> getAllStudents() {
         return studentRepository.findAll();

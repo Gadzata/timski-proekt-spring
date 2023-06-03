@@ -5,8 +5,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import mk.ukim.finki.studentplatform_backend.models.Course;
 import mk.ukim.finki.studentplatform_backend.models.Note;
+import mk.ukim.finki.studentplatform_backend.models.Student;
 import mk.ukim.finki.studentplatform_backend.repository.CourseRepository;
 import mk.ukim.finki.studentplatform_backend.repository.NoteRepository;
+import mk.ukim.finki.studentplatform_backend.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +26,16 @@ import java.util.stream.Stream;
 public class NoteService {
     @Autowired
     private NoteRepository noteRepository;
+    private StudentRepository studentRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional
-    public Optional<Note> store(MultipartFile file, Integer courseId) throws IOException {
+    public Optional<Note> store(MultipartFile file, Integer courseId, Integer studentId) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         Note note = new Note(fileName, file.getContentType(), file.getBytes(), courseId);
-
+        Student student = this.studentRepository.findById(studentId).get();
+        student.setPoints(student.getPoints()+5);
         return Optional.of(noteRepository.save(note));
     }
 
