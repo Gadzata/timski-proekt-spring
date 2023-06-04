@@ -31,4 +31,47 @@ public class Note {
         this.dateUploaded = LocalDate.now();
     }
 
+    public Integer getNoteId() {
+        return noteId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+//    public void setType(String type) {
+//        this.type = type;
+//    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public LocalDate getDateUploaded() {
+        return dateUploaded;
+    }
+
+    public void setDateUploaded(LocalDate dateUploaded) {
+        this.dateUploaded = dateUploaded;
+    }
 }

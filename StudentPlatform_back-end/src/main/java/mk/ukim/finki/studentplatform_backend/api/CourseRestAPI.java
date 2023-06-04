@@ -9,18 +9,23 @@ import mk.ukim.finki.studentplatform_backend.message.ResponseMessage;
 import mk.ukim.finki.studentplatform_backend.models.Course;
 import mk.ukim.finki.studentplatform_backend.models.Event;
 import mk.ukim.finki.studentplatform_backend.models.Note;
+import mk.ukim.finki.studentplatform_backend.models.User;
 import mk.ukim.finki.studentplatform_backend.service.CourseService;
 import mk.ukim.finki.studentplatform_backend.service.EventService;
 import mk.ukim.finki.studentplatform_backend.service.NoteService;
 import mk.ukim.finki.studentplatform_backend.service.StudentService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -108,7 +113,8 @@ public class CourseRestAPI {
         String message = "";
         try {
             HttpSession session = request.getSession(false);
-            String username = (session != null) ? (String) session.getAttribute("username") : null;
+            User user = (session != null) ? (User) session.getAttribute("user") : null;
+            String username = user.getEmail();
             if (username == null) {
                 throw new UnauthorizedException();
             }
@@ -148,6 +154,7 @@ public class CourseRestAPI {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + note.getName() + "\"")
+                .contentType(MediaType.valueOf(note.getType()))
                 .body(note.getData());
     }
 

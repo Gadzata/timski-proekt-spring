@@ -19,8 +19,8 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private CustomUsernamePasswordAuthenticationProvider customAuthenticationProvider;
+//    @Autowired
+//    private CustomUsernamePasswordAuthenticationProvider customAuthenticationProvider;
 
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService users) throws Exception {
