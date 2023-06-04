@@ -98,9 +98,8 @@ public class StudentRestAPI {
     public List<Course> showCoursesForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Student student = (Student) request.getSession().getAttribute("user");
-        if (student == null) {
+        if (student == null)
             throw new UnauthorizedException();
-        }
         return studentCourseService.getCoursesByStudent(student);
     }
 //    @GetMapping("/myCourses")
@@ -121,22 +120,18 @@ public class StudentRestAPI {
     @GetMapping("/myEvents")
     public List<Event> showEventsForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        String username = (session != null) ? (String) session.getAttribute("username") : null;
-        if (username == null) {
+        Student student = (Student) request.getSession().getAttribute("user");
+        if (student == null)
             throw new UnauthorizedException();
-        }
-        Student student = studentService.getStudentByEmail(username);
         return studentEventService.getEventsByStudent(student);
     }
 
     @GetMapping("/myUpcomingEvents")
     public List<Event> showUpcomingEventsForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        String username = (session != null) ? (String) session.getAttribute("username") : null;
-        if (username == null) {
+        Student student = (Student) request.getSession().getAttribute("user");
+        if (student == null)
             throw new UnauthorizedException();
-        }
-        Student student = studentService.getStudentByEmail(username);
         return studentEventService.getUpcomingEventsByStudent(student);
     }
 
@@ -160,22 +155,20 @@ public class StudentRestAPI {
     //returns progress as percentage
     @GetMapping("/weekly-progress")
     public Double getWeeklyProgress(HttpServletRequest request) {
-        // Fetch the student object based on the provided studentId
-
         HttpSession session = request.getSession(false);
-        String username = (session != null) ? (String) session.getAttribute("username") : null;
-        Student student = studentService.getStudentByEmail(username);
+        Student student = (Student) request.getSession().getAttribute("user");
+        if (student == null)
+            throw new UnauthorizedException();
 
         return studentEventService.calculateWeeklyProgress(student);
     }
 
     @GetMapping("/points")
     public Integer getPoints(HttpServletRequest request) {
-        // Fetch the student object based on the provided studentId
-
         HttpSession session = request.getSession(false);
-        String username = (session != null) ? (String) session.getAttribute("username") : null;
-        Student student = studentService.getStudentByEmail(username);
+        Student student = (Student) request.getSession().getAttribute("user");
+        if (student == null)
+            throw new UnauthorizedException();
 
         return student.getPoints();
     }

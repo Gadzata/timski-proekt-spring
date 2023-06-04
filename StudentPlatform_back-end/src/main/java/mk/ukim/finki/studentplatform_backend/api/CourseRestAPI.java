@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import mk.ukim.finki.studentplatform_backend.exception.UnauthorizedException;
 import mk.ukim.finki.studentplatform_backend.message.ResponseFile;
 import mk.ukim.finki.studentplatform_backend.message.ResponseMessage;
-import mk.ukim.finki.studentplatform_backend.models.Course;
-import mk.ukim.finki.studentplatform_backend.models.Event;
-import mk.ukim.finki.studentplatform_backend.models.Note;
-import mk.ukim.finki.studentplatform_backend.models.User;
+import mk.ukim.finki.studentplatform_backend.models.*;
 import mk.ukim.finki.studentplatform_backend.service.CourseService;
 import mk.ukim.finki.studentplatform_backend.service.EventService;
 import mk.ukim.finki.studentplatform_backend.service.NoteService;
@@ -113,13 +110,10 @@ public class CourseRestAPI {
         String message = "";
         try {
             HttpSession session = request.getSession(false);
-            User user = (session != null) ? (User) session.getAttribute("user") : null;
-            String username = user.getEmail();
-            if (username == null) {
+            Student student = (Student) request.getSession().getAttribute("user");
+            if (student == null)
                 throw new UnauthorizedException();
-            }
-            Integer studentId = studentService.getStudentByEmail(username).getUserId();
-            noteService.store(file, courseId, studentId);
+            noteService.store(file, courseId, student.getUserId());
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
