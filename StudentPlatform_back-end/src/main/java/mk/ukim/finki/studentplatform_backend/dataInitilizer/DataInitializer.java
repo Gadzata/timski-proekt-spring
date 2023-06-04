@@ -19,7 +19,6 @@ public class DataInitializer {
     private EventRepository eventRepository;
     private StudentEventRepository studentEventRepository;
     private MessageRepository messageRepository;
-
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
 

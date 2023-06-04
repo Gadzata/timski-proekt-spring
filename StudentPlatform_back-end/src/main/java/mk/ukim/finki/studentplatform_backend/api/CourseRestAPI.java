@@ -112,7 +112,7 @@ public class CourseRestAPI {
             if (username == null) {
                 throw new UnauthorizedException();
             }
-            Integer studentId = studentService.getStudentByEmail(username).getStudentId();
+            Integer studentId = studentService.getStudentByEmail(username).getUserId();
             noteService.store(file, courseId, studentId);
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();

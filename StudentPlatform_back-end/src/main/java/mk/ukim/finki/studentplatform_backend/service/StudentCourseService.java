@@ -36,7 +36,7 @@ public class StudentCourseService {
         }
         StudentCourse studentCourse = new StudentCourse(student, course);
         student.setPoints(student.getPoints()+1);
-        studentService.updateStudent(student.getStudentId(), student);
+        studentService.updateStudent(student.getUserId(), student);
         return repository.save(studentCourse);
     }
 
