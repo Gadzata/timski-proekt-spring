@@ -35,7 +35,7 @@ public class NoteService {
         Note note = new Note(fileName, file.getContentType(), file.getBytes(), courseId);
         Student student = this.studentService.getStudentById(studentId);
         student.setPoints(student.getPoints()+5);
-        studentService.updateStudent(student.getStudentId(), student);
+        studentService.updateStudent(student.getUserId(), student);
         return Optional.of(noteRepository.save(note));
     }
 

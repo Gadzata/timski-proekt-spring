@@ -12,6 +12,7 @@ import mk.ukim.finki.studentplatform_backend.service.StudentCourseService;
 import mk.ukim.finki.studentplatform_backend.service.StudentEventService;
 import mk.ukim.finki.studentplatform_backend.service.StudentService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -82,17 +83,41 @@ public class StudentRestAPI {
 //    public ResponseEntity<List<Course>> showCoursesForStudents(Authentication authentication) {
 //        String username = authentication.getName();
 
+//    @GetMapping("/myCourses")
+//    public List<Course> showCoursesForStudent(HttpServletRequest request) {
+//        HttpSession session = request.getSession(false);
+//        String username = (session != null) ? (String) session.getAttribute("username") : null;
+//        if (username == null) {
+//            throw new UnauthorizedException();
+//        }
+//        Student student = studentService.getStudentByEmail(username);
+//        return studentCourseService.getCoursesByStudent(student);
+//    }
+
     @GetMapping("/myCourses")
     public List<Course> showCoursesForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        String username = (session != null) ? (String) session.getAttribute("username") : null;
-        if (username == null) {
+        Student student = (Student) request.getSession().getAttribute("user");
+        if (student == null) {
             throw new UnauthorizedException();
         }
-        Student student = studentService.getStudentByEmail(username);
         return studentCourseService.getCoursesByStudent(student);
     }
-
+//    @GetMapping("/myCourses")
+//    public ResponseEntity<List<Course>> showCoursesForStudent(HttpServletRequest request) {
+//        HttpSession session = request.getSession(false);
+//        Student student = (Student) request.getSession().getAttribute("user");
+//        if(student==null){
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+////        String username = (session != null) ? (String) session.getAttribute("user") : null;
+////        if (username == null) {
+////            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+////        }
+//        //Student student = studentService.getStudentByEmail(username);
+//        List<Course> courses = studentCourseService.getCoursesByStudent(student);
+//        return ResponseEntity.ok(courses);
+//    }
     @GetMapping("/myEvents")
     public List<Event> showEventsForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -118,12 +143,18 @@ public class StudentRestAPI {
     @GetMapping("/myPastEvents")
     public List<Event> showPastEventsForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        String username = (session != null) ? (String) session.getAttribute("username") : null;
-        if (username == null) {
+        Student student = (Student) request.getSession().getAttribute("user");
+        if (student == null)
             throw new UnauthorizedException();
-        }
-        Student student = studentService.getStudentByEmail(username);
-        return studentEventService.getPastEventsByStudent(student);
+
+//        String username = (session != null) ? (String) session.getAttribute("user") : null;
+//        if (username == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+            //Student student = studentService.getStudentByEmail(username);
+
+            return studentEventService.getPastEventsByStudent(student);
+
     }
 
     //returns progress as percentage

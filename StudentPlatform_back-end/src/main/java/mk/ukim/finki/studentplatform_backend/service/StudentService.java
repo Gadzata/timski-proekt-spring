@@ -41,7 +41,7 @@ public class StudentService {
     public Student updateStudent(Integer studentId, Student student) {
         Optional<Student> studentOptional = studentRepository.findById(studentId);
         if (studentOptional.isPresent()) {
-            student.setStudentId(studentId);
+           // student.setStudentId(studentId);
             return studentRepository.save(student);
         }
         return null;

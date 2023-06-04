@@ -69,7 +69,7 @@ public class EventService {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new EntityNotFoundException("Course not found"));
         Event event = new Event(name, dateCreated, dateScheduled, createdBy, course, location, numOfStudents);
         createdBy.setPoints(createdBy.getPoints()+5);
-        studentService.updateStudent(createdBy.getStudentId(), createdBy);
+        studentService.updateStudent(createdBy.getUserId(), createdBy);
         studentEventService.createStudentEvent(createdBy, event);
         return eventRepository.save(event);
     }

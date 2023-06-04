@@ -33,7 +33,7 @@ public class StudentEventService {
         StudentEvent studentEvent = new StudentEvent(student, event);
         event.setNumOfStudents(event.getNumOfStudents()+1);
         student.setPoints(student.getPoints()+2);
-        studentService.updateStudent(student.getStudentId(), student);
+        studentService.updateStudent(student.getUserId(), student);
         return studentEventRepository.save(studentEvent);
     }
 
@@ -96,7 +96,7 @@ public class StudentEventService {
     }
 
     public StudentEvent findStudentEventByEventIdAndStudentId(Integer studentId, Integer eventId) {
-        return studentEventRepository.findStudentEventByEvent_EventIdAndStudent_StudentId(studentId, eventId);
+        return studentEventRepository.findStudentEventByEvent_EventIdAndAndStudent_UserId(studentId, eventId);
     }
 
     public double calculateWeeklyProgress(Student student) {
