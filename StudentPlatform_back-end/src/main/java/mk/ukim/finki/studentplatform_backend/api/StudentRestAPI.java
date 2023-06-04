@@ -1,16 +1,19 @@
 package mk.ukim.finki.studentplatform_backend.api;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import mk.ukim.finki.studentplatform_backend.exception.UnauthorizedException;
 import mk.ukim.finki.studentplatform_backend.models.Course;
+import mk.ukim.finki.studentplatform_backend.models.Event;
 import mk.ukim.finki.studentplatform_backend.models.Student;
 import mk.ukim.finki.studentplatform_backend.service.CourseService;
 import mk.ukim.finki.studentplatform_backend.service.StudentCourseService;
 import mk.ukim.finki.studentplatform_backend.service.StudentEventService;
 import mk.ukim.finki.studentplatform_backend.service.StudentService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -23,9 +26,12 @@ public class StudentRestAPI {
     private StudentEventService studentEventService;
     private CourseService courseService;
 
-    public StudentRestAPI(StudentService studentService, StudentCourseService studentCourseService) {
+    public StudentRestAPI(StudentService studentService, StudentCourseService studentCourseService,
+                          StudentEventService studentEventService, CourseService courseService) {
         this.studentService = studentService;
         this.studentCourseService = studentCourseService;
+        this.studentEventService = studentEventService;
+        this.courseService = courseService;
     }
 
     // Retrieve all students
@@ -63,12 +69,12 @@ public class StudentRestAPI {
 
     // Delete a student by ID
     @DeleteMapping("/{studentId}")
-    public ResponseEntity<Void> deleteStudentById(@PathVariable Integer studentId) {
-        boolean isDeleted = studentService.deleteStudentById(studentId);
-        if (isDeleted) {
-            return ResponseEntity.noContent().build();
+    public void deleteStudentById(@PathVariable Integer studentId) {
+        try {
+            studentService.deleteStudentById(studentId);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-        return ResponseEntity.notFound().build();
     }
 
     //    for when we use spring security
@@ -77,28 +83,74 @@ public class StudentRestAPI {
 //        String username = authentication.getName();
 
     @GetMapping("/myCourses")
-    public ResponseEntity<List<Course>> showCoursesForStudent(HttpServletRequest request) {
+    public List<Course> showCoursesForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         String username = (session != null) ? (String) session.getAttribute("username") : null;
         if (username == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new UnauthorizedException();
         }
         Student student = studentService.getStudentByEmail(username);
-        List<Course> courses = studentCourseService.getCoursesByStudent(student);
-        return ResponseEntity.ok(courses);
+        return studentCourseService.getCoursesByStudent(student);
+    }
+
+    @GetMapping("/myEvents")
+    public List<Event> showEventsForStudent(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        if (username == null) {
+            throw new UnauthorizedException();
+        }
+        Student student = studentService.getStudentByEmail(username);
+        return studentEventService.getEventsByStudent(student);
+    }
+
+    @GetMapping("/myUpcomingEvents")
+    public List<Event> showUpcomingEventsForStudent(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        if (username == null) {
+            throw new UnauthorizedException();
+        }
+        Student student = studentService.getStudentByEmail(username);
+        return studentEventService.getUpcomingEventsByStudent(student);
+    }
+
+    @GetMapping("/myPastEvents")
+    public List<Event> showPastEventsForStudent(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        if (username == null) {
+            throw new UnauthorizedException();
+        }
+        Student student = studentService.getStudentByEmail(username);
+        return studentEventService.getPastEventsByStudent(student);
     }
 
     //returns progress as percentage
-    @GetMapping("/{studentId}/weekly-progress")
-    public ResponseEntity<Double> getWeeklyProgress(HttpServletRequest request) {
+    @GetMapping("/weekly-progress")
+    public Double getWeeklyProgress(HttpServletRequest request) {
         // Fetch the student object based on the provided studentId
 
         HttpSession session = request.getSession(false);
         String username = (session != null) ? (String) session.getAttribute("username") : null;
         Student student = studentService.getStudentByEmail(username);
 
-        double weeklyProgress = studentEventService.calculateWeeklyProgress(student);
+        return studentEventService.calculateWeeklyProgress(student);
+    }
 
-        return ResponseEntity.ok(weeklyProgress);
+    @GetMapping("/points")
+    public Integer getPoints(HttpServletRequest request) {
+        // Fetch the student object based on the provided studentId
+
+        HttpSession session = request.getSession(false);
+        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        Student student = studentService.getStudentByEmail(username);
+
+        return student.getPoints();
+    }
+
+    @GetMapping("/scoreboard")
+    public List<Student> getScoreboard(){
+        return studentService.getScoreboard();
     }
 }

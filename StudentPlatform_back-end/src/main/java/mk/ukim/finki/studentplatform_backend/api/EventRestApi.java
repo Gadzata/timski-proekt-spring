@@ -36,6 +36,12 @@ public class EventRestApi {
         return events;
     }
 
+    @GetMapping("/upcoming")
+    public List<Event> getAllUpcomingEvents() {
+        List<Event> upcomingEvents = eventService.getAllUpcomingEvents();
+        return upcomingEvents;
+    }
+
     @GetMapping("/{eventId}")
     public Event getEventById(@PathVariable("eventId") Integer eventId) {
         try {
@@ -45,27 +51,28 @@ public class EventRestApi {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
     @PostMapping
     public Event createEvent(@RequestParam String name,
-                                             @RequestParam Date dateCreated,
-                                             @RequestParam Date dateScheduled,
-                                             @RequestParam Integer studentId,
-                                             @RequestParam Integer courseId,
-                                             @RequestParam String location,
-                                             @RequestParam Integer numOfStudents) {
+                             @RequestParam Date dateCreated,
+                             @RequestParam Date dateScheduled,
+                             @RequestParam Integer studentId,
+                             @RequestParam Integer courseId,
+                             @RequestParam String location,
+                             @RequestParam Integer numOfStudents) {
         Event event = eventService.createEvent(name, dateCreated, dateScheduled, studentId, courseId, location, numOfStudents);
         return event;
     }
 
     @PutMapping("/{eventId}")
     public void updateEvent(@PathVariable("eventId") Integer eventId,
-                                             @RequestParam String name,
-                                             @RequestParam Date dateCreated,
-                                             @RequestParam Date dateScheduled,
-                                             @RequestParam Integer studentId,
-                                             @RequestParam Integer courseId,
-                                             @RequestParam String location,
-                                             @RequestParam Integer numOfStudents) {
+                            @RequestParam String name,
+                            @RequestParam Date dateCreated,
+                            @RequestParam Date dateScheduled,
+                            @RequestParam Integer studentId,
+                            @RequestParam Integer courseId,
+                            @RequestParam String location,
+                            @RequestParam Integer numOfStudents) {
         try {
             eventService.updateEvent(eventId, name, dateCreated, dateScheduled, studentId, courseId, location, numOfStudents);
         } catch (EntityNotFoundException e) {
@@ -76,7 +83,6 @@ public class EventRestApi {
     @DeleteMapping("/{eventId}")
     public void deleteEvent(@PathVariable("eventId") Integer eventId) {
         try {
-            Event event = eventService.getEventById(eventId);
             eventService.deleteEvent(eventId);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

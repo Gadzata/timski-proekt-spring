@@ -1,11 +1,10 @@
 package mk.ukim.finki.studentplatform_backend.service;
 
 import mk.ukim.finki.studentplatform_backend.models.*;
-import mk.ukim.finki.studentplatform_backend.repository.EventRepository;
 import mk.ukim.finki.studentplatform_backend.repository.StudentEventRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +13,10 @@ import java.util.Optional;
 public class StudentEventService {
 
     private StudentEventRepository studentEventRepository;
+
+    public StudentEventService(StudentEventRepository studentEventRepository) {
+        this.studentEventRepository = studentEventRepository;
+    }
 
     public List<StudentEvent> getAllStudentEvents() {
         return studentEventRepository.findAll();
@@ -53,6 +56,39 @@ public class StudentEventService {
 
     public List<StudentEvent> getStudentEventByStudent(Student student) {
         return studentEventRepository.findStudentEventByStudent(student);
+    }
+
+    public List<Event> getEventsByStudent(Student student) {
+        List<StudentEvent> studentEvents = studentEventRepository.findStudentEventByStudent(student);
+        List<Event> events = new ArrayList<>();
+        for (StudentEvent studentEvent : studentEvents) {
+            events.add(studentEvent.getEvent());
+        }
+        return events;
+    }
+
+    public List<Event> getUpcomingEventsByStudent(Student student) {
+        Date currentDate = new Date();
+        List<StudentEvent> studentEvents = studentEventRepository.findStudentEventByStudent(student);
+        List<Event> upcomingEvents = new ArrayList<>();
+        for (StudentEvent studentEvent : studentEvents) {
+            Event event = studentEvent.getEvent();
+            if(event.getDateScheduled().after(currentDate))
+                upcomingEvents.add(studentEvent.getEvent());
+        }
+        return upcomingEvents;
+    }
+
+    public List<Event> getPastEventsByStudent(Student student) {
+        Date currentDate = new Date();
+        List<StudentEvent> studentEvents = studentEventRepository.findStudentEventByStudent(student);
+        List<Event> pastEvents = new ArrayList<>();
+        for (StudentEvent studentEvent : studentEvents) {
+            Event event = studentEvent.getEvent();
+            if(event.getDateScheduled().before(currentDate))
+                pastEvents.add(studentEvent.getEvent());
+        }
+        return pastEvents;
     }
 
     public StudentEvent findStudentEventByEventIdAndStudentId(Integer studentId, Integer eventId) {

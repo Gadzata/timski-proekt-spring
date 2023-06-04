@@ -1,14 +1,18 @@
 package mk.ukim.finki.studentplatform_backend.api;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import mk.ukim.finki.studentplatform_backend.exception.UnauthorizedException;
 import mk.ukim.finki.studentplatform_backend.message.ResponseFile;
 import mk.ukim.finki.studentplatform_backend.message.ResponseMessage;
 import mk.ukim.finki.studentplatform_backend.models.Course;
 import mk.ukim.finki.studentplatform_backend.models.Event;
 import mk.ukim.finki.studentplatform_backend.models.Note;
 import mk.ukim.finki.studentplatform_backend.service.CourseService;
+import mk.ukim.finki.studentplatform_backend.service.EventService;
 import mk.ukim.finki.studentplatform_backend.service.NoteService;
-import org.springframework.beans.factory.annotation.Autowired;
+import mk.ukim.finki.studentplatform_backend.service.StudentService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +22,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,12 +29,16 @@ import java.util.stream.Collectors;
 public class CourseRestAPI {
 
     private CourseService courseService;
-
+    private EventService eventService;
     private NoteService noteService;
+    private StudentService studentService;
 
-    public CourseRestAPI(CourseService courseService, NoteService noteService) {
+    public CourseRestAPI(CourseService courseService, NoteService noteService, EventService eventService,
+                         StudentService studentService) {
         this.courseService = courseService;
         this.noteService = noteService;
+        this.eventService = eventService;
+        this.studentService = studentService;
     }
 
     //when a student clicks 'add new course' from the home page
@@ -54,6 +61,16 @@ public class CourseRestAPI {
         }
     }
 
+    @GetMapping("/{id}/upcomingEvents")
+    public List<Event> getAllUpcomingEventsInCourse(@PathVariable Integer id) {
+        return eventService.getAllUpcomingEventsInCourse(id);
+    }
+
+    @GetMapping("/{id}/allEvents")
+    public List<Event> getAllEventsInCourse(@PathVariable Integer id) {
+        return eventService.getAllEventsInCourse(id);
+    }
+
     //    @GetMapping("/{id}")
 //    public ResponseEntity<Course> findById(@PathVariable Integer id) {
 //        Optional<Course> course = this.courseService.findCourseById(id);
@@ -62,16 +79,21 @@ public class CourseRestAPI {
 //    }
     @PostMapping
     public Course createCourse(@RequestParam String name,
+                               @RequestParam String description,
                                @RequestParam Integer participants,
                                @RequestParam Boolean done) {
-        return courseService.createCourse(name, participants, done);
+        return courseService.createCourse(name, description, participants, done);
     }
 
 
     @PutMapping("/{courseId}")
-    public void updateCourse(@PathVariable("courseId") Integer courseId, @RequestParam String name, @RequestParam Integer participants, @RequestParam Boolean done) {
+    public void updateCourse(@PathVariable("courseId") Integer courseId,
+                             @RequestParam String name,
+                             @RequestParam String description,
+                             @RequestParam Integer participants,
+                             @RequestParam Boolean done) {
         try {
-            courseService.updateCourse(courseId, name, participants, done);
+            courseService.updateCourse(courseId, description, name, participants, done);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -80,17 +102,22 @@ public class CourseRestAPI {
     @DeleteMapping("/{courseId}")
     public void deleteCourse(@PathVariable("courseId") Integer courseId) {
         try {
-            Course course = courseService.getCourseById(courseId);
             courseService.deleteCourse(courseId);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    @PostMapping("/{id}/upload")
-    public ResponseEntity<ResponseMessage> uploadFile(@PathVariable Integer courseId, @PathVariable Integer studentId, @RequestParam("file") MultipartFile file) {
+    @PostMapping("/{courseId}/upload")
+    public ResponseEntity<ResponseMessage> uploadFile(@PathVariable Integer courseId, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
         String message = "";
         try {
+            HttpSession session = request.getSession(false);
+            String username = (session != null) ? (String) session.getAttribute("username") : null;
+            if (username == null) {
+                throw new UnauthorizedException();
+            }
+            Integer studentId = studentService.getStudentByEmail(username).getStudentId();
             noteService.store(file, courseId, studentId);
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();

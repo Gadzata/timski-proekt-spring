@@ -17,17 +17,20 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer courseId;
     String name;
+    String description;
     Integer participants;
     Boolean done;
 
-    public Course(String name) {
+    public Course(String name, String description) {
         this.name = name;
+        this.description = description;
         this.participants = 0;
         this.done = false;
     }
 
-    public Course(String name, Integer participants, Boolean done) {
+    public Course(String name, String description, Integer participants, Boolean done) {
         this.name = name;
+        this.description = description;
         this.participants = participants;
         this.done = done;
     }

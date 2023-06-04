@@ -57,4 +57,8 @@ public class StudentService {
         return false;
     }
 
+    public List<Student> getScoreboard() {
+        return studentRepository.findAllByOrderByPointsDesc();
+    }
+
 }

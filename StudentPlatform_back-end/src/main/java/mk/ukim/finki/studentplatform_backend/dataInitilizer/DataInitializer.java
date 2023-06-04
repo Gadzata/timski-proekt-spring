@@ -51,53 +51,70 @@ public class DataInitializer {
         studentRepository.save(student5);
 
         //Courses
-        Course course1 = new Course("Algorithms and data structures",5,false);
+        Course course1 = new Course("Algorithms and data structures","Introduction to basic data " +
+                "structures and algorithms needed to understand different technologies (e.g. databases, application " +
+                "development frameworks)",5,false);
         courseRepository.save(course1);
 
-        Course course2 = new Course("Design of interaction computer-human");
+        Course course2 = new Course("Design of interaction computer-human","designing interactive systems, " +
+                "design phases (collection and analysis of requirements, prototyping, implementation and usability testing)");
         courseRepository.save(course2);
 
-        Course course3 = new Course("Team project",10,false);
+        Course course3 = new Course("Team project","Team project with minimum 3 students, with mentorship " +
+                "from one professor",10,false);
         courseRepository.save(course3);
 
-        Course course4 = new Course("Object oriented programming",50,true);
+        Course course4 = new Course("Object oriented programming","concepts of classes and objects will " +
+                "be introduced, encapsulation, inheritance and polymorphism",50,true);
         courseRepository.save(course4);
 
-        Course course5 = new Course("Programming of video games");
+        Course course5 = new Course("Programming of video games","basic components of video " +
+                "games and video game programming approaches");
         courseRepository.save(course5);
 
-        Course course6 = new Course("Web based systems",20,false);
+        Course course6 = new Course("Web based systems","Learning and using the technologies of the " +
+                "Semantic Web and Linked Data. Intelligent applications based on Linked Data, and " +
+                "Open Data datasets.",20,false);
         courseRepository.save(course6);
 
-        Course course7 = new Course("Digital libraries",33,true);
+        Course course7 = new Course("Digital libraries","description",33,true);
         courseRepository.save(course7);
 
-        Course course8 = new Course("Media and communications");
+        Course course8 = new Course("Media and communications","new media, and how they " +
+                "fit in different sociological environments");
         courseRepository.save(course8);
 
-        Course course9 = new Course("Software quality and testing");
+        Course course9 = new Course("Software quality and testing","The goal of this course is " +
+                "to understand the need for software testing, different techniques of software modeling, " +
+                "and using those models for testing");
         courseRepository.save(course9);
 
-        Course course10 = new Course("Databases");
+        Course course10 = new Course("Databases","basic concepts for using the databases; " +
+                "the ways of their modeling and implementation; as well as the application of the query languages");
         courseRepository.save(course10);
 
-        Course course11 = new Course("Integrated systems");
+        Course course11 = new Course("Integrated systems","design, select, " +
+                "implement and manage enterprise IT solutions");
         courseRepository.save(course11);
 
-        Course course12 = new Course("Web programmming");
+        Course course12 = new Course("Web programmming","Web application development, using the MVC pattern");
         courseRepository.save(course12);
 
-        Course course13 = new Course("Discrete mathematics");
+        Course course13 = new Course("Discrete mathematics","To introduce students to basic mathematical " +
+                "concepts as a foundation for the following courses in information technologies, computer and software engineering.");
         courseRepository.save(course13);
 
-        Course course14 = new Course("Web based systems");
+        Course course14 = new Course("Web based systems","The students will learn how to develop intelligent" +
+                " applications based on Linked Data, and discover and use Open Data datasets.");
         courseRepository.save(course14);
 
-        Course course15 = new Course("Marketing");
+        Course course15 = new Course("Marketing","marketing problems through analytical tools (frameworks," +
+                " concepts, models and techniques); Examples of case studies how enterprises are organizing their marketing " +
+                "operations, with an emphasis on ICT enterprises");
         courseRepository.save(course15);
 
         //for random studying, every student has this course automatically
-        Course course16 = new Course("Random");
+        Course course16 = new Course("Random","every student can access this course");
         courseRepository.save(course16);
 
         //StudentCourse
