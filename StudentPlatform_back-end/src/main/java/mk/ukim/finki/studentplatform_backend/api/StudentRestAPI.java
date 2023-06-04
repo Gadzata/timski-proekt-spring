@@ -79,11 +79,15 @@ public class StudentRestAPI {
     @GetMapping("/myCourses")
     public ResponseEntity<List<Course>> showCoursesForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        String username = (session != null) ? (String) session.getAttribute("user") : null;
-        if (username == null) {
+        Student student = (Student) request.getSession().getAttribute("user");
+        if(student==null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Student student = studentService.getStudentByEmail(username);
+//        String username = (session != null) ? (String) session.getAttribute("user") : null;
+//        if (username == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+        //Student student = studentService.getStudentByEmail(username);
         List<Course> courses = studentCourseService.getCoursesByStudent(student);
         return ResponseEntity.ok(courses);
     }

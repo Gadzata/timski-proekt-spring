@@ -8,6 +8,9 @@ import mk.ukim.finki.studentplatform_backend.repository.StudentRepository;
 import mk.ukim.finki.studentplatform_backend.repository.UserRepository;
 import org.apache.hc.client5.http.auth.InvalidCredentialsException;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +19,7 @@ import java.util.Optional;
 
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
@@ -36,19 +39,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User findByUsername(String username) throws InvalidCredentialsException {
-        return userRepository.findByUsername(username).orElseThrow(InvalidCredentialsException::new);
+    public User findByUsername(String email) throws InvalidCredentialsException {
+        return userRepository.findByEmail(email).orElseThrow(InvalidCredentialsException::new);
     }
 
     @Transactional
-    public User register(String username, String password, String repeatPassword,String name,String surname,String email,Integer points) throws InvalidCredentialsException {
+    public User register(String email, String password, String repeatPassword,String name,String surname,Integer points) throws InvalidCredentialsException {
         if (!password.equals(repeatPassword)) {
             throw new InvalidCredentialsException();
         }
-        if (checkIfExists(username).isPresent()) {
+        if (checkIfExists(email).isPresent()) {
             throw new InvalidCredentialsException();
         }
-        Student student = new Student(username, passwordEncoder.encode(password), name, surname,email,points);
+        if(!email.endsWith("@students.finki.ukim.mk"))
+            throw new InvalidCredentialsException();
+        Student student = new Student(email, passwordEncoder.encode(password), name, surname,points);
         userRepository.save(student);
         studentRepository.save(student);
         return student;
@@ -66,10 +71,15 @@ public class UserService {
         }
     }
 
-    public User login(String username, String password) throws InvalidCredentialsException {
-        User user = findByUsername(username);
+    public User login(String email, String password) throws InvalidCredentialsException {
+        User user = findByUsername(email);
         if (passwordEncoder.matches(password, user.getPassword()))
             return user;
         throw new InvalidCredentialsException();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
     }
 }

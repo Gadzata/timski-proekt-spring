@@ -1,6 +1,7 @@
 package mk.ukim.finki.studentplatform_backend.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import mk.ukim.finki.studentplatform_backend.models.Student;
 import mk.ukim.finki.studentplatform_backend.models.User;
 import mk.ukim.finki.studentplatform_backend.service.UserService;
 import org.apache.hc.client5.http.auth.InvalidCredentialsException;
@@ -28,20 +29,31 @@ public class UserRestApi {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username,
+    public ResponseEntity<String> login(@RequestParam String email,
                                         @RequestParam String password,
                                         HttpServletRequest request,
                                         Model model) {
         try {
-            User user = userService.login(username, password);
+            User user = userService.login(email, password);
             request.getSession().setAttribute("user", user);
-            System.out.println(request.getSession());
-            return ResponseEntity.ok().body("User logged in successfully"+request.getSession().getAttribute("user"));
+            System.out.println(request.getSession().getAttribute("user"));
+            Student student = (Student) request.getSession().getAttribute("user");
+            User u  = userService.findByUsername(student.getEmail());
+            return ResponseEntity.ok().body("User logged in successfully"+request.getSession().getAttribute("user")+u.getEmail());
         } catch (InvalidCredentialsException e) {
             model.addAttribute("error", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
+//    @PostMapping("/post")
+//    public ResponseEntity<UserDto> login(@RequestBody LoginForm loginForm) {
+//        User user = userService.login(loginForm.getUsername(), loginForm.getPassword());
+////        UserDto userDto = UserMapper.INSTANCE.toDto(user);
+//        UserDto userDto = userService.getUser(user.getUserID());
+//        return ResponseEntity.ok(userDto);
+//    }
 
     @GetMapping("/register")
     public String getRegisterPage(Model model) {
@@ -50,16 +62,15 @@ public class UserRestApi {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestParam String username,
+    public ResponseEntity<String> register(@RequestParam String email,
                                            @RequestParam String password,
                                            @RequestParam String repeatedPassword,
                                            @RequestParam String name,
                                            @RequestParam String surname,
-                                           @RequestParam String email,
                                            @RequestParam Integer points,
                                            Model model) {
         try {
-            userService.register(username,password, repeatedPassword,name,surname,email,points);
+            userService.register(email,password, repeatedPassword,name,surname,points);
             return ResponseEntity.ok().body("User registered successfully");
         } catch (InvalidCredentialsException e) {
             model.addAttribute("error", e.getMessage());

@@ -24,12 +24,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer userId;
-    private String username;
-
+    private String email;
     private String password;
 
-    public User(String username, String password) {
-        this.username = username;
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 }

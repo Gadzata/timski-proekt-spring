@@ -41,27 +41,27 @@ public class DataInitializer {
     public void initData() {
 
         //Users
-        User user = new User("user", passwordEncoder.encode("password"));
-        User user2 = new User("user2", passwordEncoder.encode("password2"));
-        User user3 =  new User("user3", passwordEncoder.encode("password3"));
-        User user4 = new User("user4", passwordEncoder.encode("password4"));
-        User user5 = new User("user5", passwordEncoder.encode("password5"));
+        User user = new User("student1@students.finki.ukim.mk", passwordEncoder.encode("password"));
+        User user2 = new User("student2@students.finki.ukim.mk", passwordEncoder.encode("password2"));
+        User user3 =  new User("student3@students.finki.ukim.mk", passwordEncoder.encode("password3"));
+        User user4 = new User("student4@students.finki.ukim.mk", passwordEncoder.encode("password4"));
+        User user5 = new User("student5@students.finki.ukim.mk", passwordEncoder.encode("password5"));
 
         //Students
-        Student student1 = new Student(user.getUsername(),user.getPassword(),"Student1", "Student1Surname", "student1@students.finki.ukim.mk", 0);
+        Student student1 = new Student(user.getEmail(),user.getPassword(),"Student1", "Student1Surname", 0);
         studentRepository.save(student1);
 
 
-        Student student2 = new Student(user2.getUsername(),user2.getPassword(),"Student2", "Student2Surname", "student2@students.finki.ukim.mk", 5);
+        Student student2 = new Student(user2.getEmail(),user2.getPassword(),"Student2", "Student2Surname", 5);
         studentRepository.save(student2);
 
-        Student student3 = new Student(user3.getUsername(), user3.getPassword(), "Student3", "Student3Surname", "student3@students.finki.ukim.mk", 7);
+        Student student3 = new Student(user3.getEmail(), user3.getPassword(), "Student3", "Student3Surname", 7);
         studentRepository.save(student3);
 
-        Student student4 = new Student(user4.getUsername(), user4.getPassword(), "Student4", "Student4Surname", "student4@students.finki.ukim.mk", 10);
+        Student student4 = new Student(user4.getEmail(), user4.getPassword(), "Student4", "Student4Surname", 10);
         studentRepository.save(student4);
 
-        Student student5 = new Student(user5.getUsername(), user5.getPassword(), "Student5", "Student5Surname", "student5@students.finki.ukim.mk", 15);
+        Student student5 = new Student(user5.getEmail(), user5.getPassword(), "Student5", "Student5Surname", 15);
         studentRepository.save(student5);
 
         //Courses
