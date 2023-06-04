@@ -25,6 +25,10 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
+    public List<Message> getAllByStudentEventOrderByDateWritten(StudentEvent studentEvent){
+        return messageRepository.getAllByStudentEventOrderByDateWritten(studentEvent);
+    }
+
     public Message getMessageById(Integer messageId) {
         return messageRepository.findById(messageId).orElse(null);
     }

@@ -13,9 +13,11 @@ import java.util.List;
 @Service
 public class StudentCourseService {
     private final StudentCourseRepository repository;
+    private final StudentService studentService;
 
-    public StudentCourseService(StudentCourseRepository repository) {
+    public StudentCourseService(StudentCourseRepository repository, StudentService studentService) {
         this.repository = repository;
+        this.studentService = studentService;
     }
 
     public List<StudentCourse> getAllStudentCourses() {
@@ -33,6 +35,8 @@ public class StudentCourseService {
             throw new StudentCourseException();
         }
         StudentCourse studentCourse = new StudentCourse(student, course);
+        student.setPoints(student.getPoints()+1);
+        studentService.updateStudent(student.getStudentId(), student);
         return repository.save(studentCourse);
     }
 

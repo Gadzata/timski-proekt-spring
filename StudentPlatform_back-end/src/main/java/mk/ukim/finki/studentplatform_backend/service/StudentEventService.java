@@ -1,11 +1,10 @@
 package mk.ukim.finki.studentplatform_backend.service;
 
 import mk.ukim.finki.studentplatform_backend.models.*;
-import mk.ukim.finki.studentplatform_backend.repository.EventRepository;
 import mk.ukim.finki.studentplatform_backend.repository.StudentEventRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +12,13 @@ import java.util.Optional;
 @Service
 public class StudentEventService {
 
-    private StudentEventRepository studentEventRepository;
+    private final StudentEventRepository studentEventRepository;
+    private final StudentService studentService;
+
+    public StudentEventService(StudentEventRepository studentEventRepository, StudentService studentService) {
+        this.studentEventRepository = studentEventRepository;
+        this.studentService = studentService;
+    }
 
     public List<StudentEvent> getAllStudentEvents() {
         return studentEventRepository.findAll();
@@ -27,6 +32,8 @@ public class StudentEventService {
     public StudentEvent createStudentEvent(Student student, Event event) {
         StudentEvent studentEvent = new StudentEvent(student, event);
         event.setNumOfStudents(event.getNumOfStudents()+1);
+        student.setPoints(student.getPoints()+2);
+        studentService.updateStudent(student.getStudentId(), student);
         return studentEventRepository.save(studentEvent);
     }
 
@@ -53,6 +60,43 @@ public class StudentEventService {
 
     public List<StudentEvent> getStudentEventByStudent(Student student) {
         return studentEventRepository.findStudentEventByStudent(student);
+    }
+
+    public List<Event> getEventsByStudent(Student student) {
+        List<StudentEvent> studentEvents = studentEventRepository.findStudentEventByStudent(student);
+        List<Event> events = new ArrayList<>();
+        for (StudentEvent studentEvent : studentEvents) {
+            events.add(studentEvent.getEvent());
+        }
+        return events;
+    }
+
+    public List<Event> getUpcomingEventsByStudent(Student student) {
+        Date currentDate = new Date();
+        List<StudentEvent> studentEvents = studentEventRepository.findStudentEventByStudent(student);
+        List<Event> upcomingEvents = new ArrayList<>();
+        for (StudentEvent studentEvent : studentEvents) {
+            Event event = studentEvent.getEvent();
+            if(event.getDateScheduled().after(currentDate))
+                upcomingEvents.add(studentEvent.getEvent());
+        }
+        return upcomingEvents;
+    }
+
+    public List<Event> getPastEventsByStudent(Student student) {
+        Date currentDate = new Date();
+        List<StudentEvent> studentEvents = studentEventRepository.findStudentEventByStudent(student);
+        List<Event> pastEvents = new ArrayList<>();
+        for (StudentEvent studentEvent : studentEvents) {
+            Event event = studentEvent.getEvent();
+            if(event.getDateScheduled().before(currentDate))
+                pastEvents.add(studentEvent.getEvent());
+        }
+        return pastEvents;
+    }
+
+    public StudentEvent findStudentEventByEventIdAndStudentId(Integer studentId, Integer eventId) {
+        return studentEventRepository.findStudentEventByEvent_EventIdAndStudent_StudentId(studentId, eventId);
     }
 
     public double calculateWeeklyProgress(Student student) {

@@ -6,7 +6,6 @@ import mk.ukim.finki.studentplatform_backend.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CourseService {
@@ -28,14 +27,15 @@ public class CourseService {
     public Course findCourseByName(String name){ return courseRepository.findByName(name); }
 
 
-    public Course createCourse(String name, Integer participants, Boolean done) {
-        Course course = new Course(name, participants, done);
+    public Course createCourse(String name, String description, Integer participants, Boolean done) {
+        Course course = new Course(name, description, participants, done);
         return courseRepository.save(course);
     }
 
-    public Course updateCourse(Integer id, String name, Integer participants, Boolean done) {
+    public Course updateCourse(Integer id, String name, String description, Integer participants, Boolean done) {
         Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Course not found"));
         existingCourse.setName(name);
+        existingCourse.setDescription(description);
         existingCourse.setParticipants(participants);
         existingCourse.setDone(done);
 
