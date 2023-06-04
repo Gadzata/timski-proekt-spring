@@ -6,7 +6,6 @@ import mk.ukim.finki.studentplatform_backend.models.Event;
 import mk.ukim.finki.studentplatform_backend.models.Student;
 import mk.ukim.finki.studentplatform_backend.repository.CourseRepository;
 import mk.ukim.finki.studentplatform_backend.repository.EventRepository;
-import mk.ukim.finki.studentplatform_backend.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,14 +15,17 @@ import java.util.List;
 @Service
 public class EventService {
 
-    private EventRepository eventRepository;
-    private CourseRepository courseRepository;
-    private StudentRepository studentRepository;
+    private final EventRepository eventRepository;
+    private final CourseRepository courseRepository;
+    private final StudentService studentService;
+    private final StudentEventService studentEventService;
 
-    public EventService(EventRepository eventRepository, CourseRepository courseRepository, StudentRepository studentRepository) {
+    public EventService(EventRepository eventRepository, CourseRepository courseRepository, StudentService studentService,
+                        StudentEventService studentEventService) {
         this.eventRepository = eventRepository;
         this.courseRepository = courseRepository;
-        this.studentRepository = studentRepository;
+        this.studentService = studentService;
+        this.studentEventService = studentEventService;
     }
 
     public List<Event> getAllEvents() {
@@ -63,15 +65,17 @@ public class EventService {
     }
 
     public Event createEvent(String name, Date dateCreated, Date dateScheduled, Integer studentId, Integer courseId, String location, Integer numOfStudents) {
-        Student createdBy = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException("Student not found"));
+        Student createdBy = studentService.getStudentById(studentId);
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new EntityNotFoundException("Course not found"));
         Event event = new Event(name, dateCreated, dateScheduled, createdBy, course, location, numOfStudents);
         createdBy.setPoints(createdBy.getPoints()+5);
+        studentService.updateStudent(createdBy.getStudentId(), createdBy);
+        studentEventService.createStudentEvent(createdBy, event);
         return eventRepository.save(event);
     }
 
     public Event updateEvent(Integer id, String name, Date dateCreated, Date dateScheduled, Integer studentId, Integer courseId, String location, Integer numOfStudents) {
-        Student createdBy = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException("Student not found"));
+        Student createdBy = studentService.getStudentById(studentId);
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new EntityNotFoundException("Course not found"));
         Event event = eventRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Event not found"));
         event.setName(name);

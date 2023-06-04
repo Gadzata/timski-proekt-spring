@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/courses")
 public class CourseRestAPI {
 
-    private CourseService courseService;
-    private EventService eventService;
-    private NoteService noteService;
-    private StudentService studentService;
+    private final CourseService courseService;
+    private final EventService eventService;
+    private final NoteService noteService;
+    private final StudentService studentService;
 
     public CourseRestAPI(CourseService courseService, NoteService noteService, EventService eventService,
                          StudentService studentService) {
@@ -46,11 +46,6 @@ public class CourseRestAPI {
     private List<Course> findAll() {
         return this.courseService.getAllCourses();
     }
-
-//    @GetMapping("/{courseId}")
-//    public Course getCourseById(@PathVariable("courseId") Integer courseId) {
-//        return courseService.getCourseById(courseId);
-//    }
 
     @GetMapping("/{id}")
     public Course getCourseById(@PathVariable Integer id) {

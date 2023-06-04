@@ -12,10 +12,12 @@ import java.util.Optional;
 @Service
 public class StudentEventService {
 
-    private StudentEventRepository studentEventRepository;
+    private final StudentEventRepository studentEventRepository;
+    private final StudentService studentService;
 
-    public StudentEventService(StudentEventRepository studentEventRepository) {
+    public StudentEventService(StudentEventRepository studentEventRepository, StudentService studentService) {
         this.studentEventRepository = studentEventRepository;
+        this.studentService = studentService;
     }
 
     public List<StudentEvent> getAllStudentEvents() {
@@ -30,6 +32,8 @@ public class StudentEventService {
     public StudentEvent createStudentEvent(Student student, Event event) {
         StudentEvent studentEvent = new StudentEvent(student, event);
         event.setNumOfStudents(event.getNumOfStudents()+1);
+        student.setPoints(student.getPoints()+2);
+        studentService.updateStudent(student.getStudentId(), student);
         return studentEventRepository.save(studentEvent);
     }
 
