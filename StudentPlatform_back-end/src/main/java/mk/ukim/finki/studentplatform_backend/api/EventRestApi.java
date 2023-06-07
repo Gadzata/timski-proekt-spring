@@ -111,6 +111,6 @@ public class EventRestApi {
         Student student = (Student) request.getSession().getAttribute("user");
         if (student == null)
             throw new UnauthorizedException();
-        return messageService.getAllByStudentEventOrderByDateWritten(this.studentEventService.findStudentEventByEventIdAndStudentId(student.getUserId(), eventId));
+        return messageService.getMessagesByEvent(eventService.getEventById(eventId));
     }
 }

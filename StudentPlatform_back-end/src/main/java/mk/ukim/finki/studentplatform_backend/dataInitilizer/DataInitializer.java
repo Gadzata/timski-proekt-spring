@@ -7,6 +7,7 @@ import mk.ukim.finki.studentplatform_backend.repository.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Component
@@ -173,9 +174,17 @@ public class DataInitializer {
         StudentEvent studentEvent4 = new StudentEvent(student2, event6);
         studentEventRepository.save(studentEvent4);
 
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2023);
+        calendar.set(Calendar.MONTH, Calendar.MAY);
+        calendar.set(Calendar.DAY_OF_MONTH, 30);
+
+        Date manuallySetDate = calendar.getTime();
+
         //Messages
         Message message1 = messageRepository.save(new Message(studentEvent1, "Hello from Student1", new Date()));
-        Message message2 = messageRepository.save(new Message(studentEvent1, "Hi from Student2",new Date()));
+        Message message2 = messageRepository.save(new Message(studentEvent1, "Hi from Student2",manuallySetDate));
         Message message3 = messageRepository.save(new Message(studentEvent2,"Hey from Student2",new Date()));
         Message message4 = messageRepository.save(new Message(studentEvent3, "Good luck from Student3", new Date()));
         Message message5 = messageRepository.save(new Message(studentEvent3, "Wishing you success", new Date()));

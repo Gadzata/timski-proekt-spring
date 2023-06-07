@@ -1,5 +1,6 @@
 package mk.ukim.finki.studentplatform_backend.service;
 
+import mk.ukim.finki.studentplatform_backend.models.Event;
 import mk.ukim.finki.studentplatform_backend.models.Message;
 import mk.ukim.finki.studentplatform_backend.models.StudentEvent;
 import mk.ukim.finki.studentplatform_backend.repository.MessageRepository;
@@ -27,6 +28,10 @@ public class MessageService {
 
     public List<Message> getAllByStudentEventOrderByDateWritten(StudentEvent studentEvent){
         return messageRepository.getAllByStudentEventOrderByDateWritten(studentEvent);
+    }
+
+    public List<Message> getMessagesByEvent(Event event) {
+        return messageRepository.findByStudentEventEventOrderByDateWritten(event);
     }
 
     public Message getMessageById(Integer messageId) {
