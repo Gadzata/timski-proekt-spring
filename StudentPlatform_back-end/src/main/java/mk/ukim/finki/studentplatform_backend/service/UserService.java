@@ -8,6 +8,7 @@ import mk.ukim.finki.studentplatform_backend.repository.StudentRepository;
 import mk.ukim.finki.studentplatform_backend.repository.UserRepository;
 import org.apache.hc.client5.http.auth.InvalidCredentialsException;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -80,6 +83,9 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        Student student = this.studentRepository.findByEmail(username).orElse(null);
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(student.getEmail(), student.getPassword(),
+                Stream.of(new SimpleGrantedAuthority("ROLE_USER")).collect(Collectors.toList()));
+        return userDetails;
     }
 }

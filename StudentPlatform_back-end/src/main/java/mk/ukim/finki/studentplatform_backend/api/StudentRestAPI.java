@@ -12,7 +12,6 @@ import mk.ukim.finki.studentplatform_backend.service.StudentCourseService;
 import mk.ukim.finki.studentplatform_backend.service.StudentEventService;
 import mk.ukim.finki.studentplatform_backend.service.StudentService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -101,6 +100,7 @@ public class StudentRestAPI {
         if (student == null)
             throw new UnauthorizedException();
         return studentCourseService.getCoursesByStudent(student);
+
     }
 //    @GetMapping("/myCourses")
 //    public ResponseEntity<List<Course>> showCoursesForStudent(HttpServletRequest request) {
