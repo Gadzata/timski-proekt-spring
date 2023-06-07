@@ -19,6 +19,7 @@ public class CustomUsernamePasswordAuthenticationProvider implements Authenticat
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final HttpSession session;
+    private Authentication authenticatedUser;
 
     public CustomUsernamePasswordAuthenticationProvider(UserService userService, PasswordEncoder passwordEncoder, HttpSession session) {
         this.userService = userService;
@@ -41,7 +42,7 @@ public class CustomUsernamePasswordAuthenticationProvider implements Authenticat
             throw new BadCredentialsException("Password is incorrect!");
         }
 
-        Authentication authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        this.authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
 
         // Store the authenticated user in the session
         User user = null;
@@ -53,6 +54,14 @@ public class CustomUsernamePasswordAuthenticationProvider implements Authenticat
         session.setAttribute("user", user);
 
         return authenticatedUser;
+    }
+
+    public Authentication getAuthenticatedUser() {
+        return authenticatedUser;
+    }
+
+    public String getAuthenticatedUserToken() {
+        return (String) authenticatedUser.getDetails().toString();
     }
 
     @Override
