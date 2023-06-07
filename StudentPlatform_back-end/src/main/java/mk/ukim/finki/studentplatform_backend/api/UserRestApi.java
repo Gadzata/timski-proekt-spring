@@ -1,16 +1,14 @@
 package mk.ukim.finki.studentplatform_backend.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import mk.ukim.finki.studentplatform_backend.api.dtos.RegisterRequest;
 import mk.ukim.finki.studentplatform_backend.models.Student;
 import mk.ukim.finki.studentplatform_backend.models.User;
 import mk.ukim.finki.studentplatform_backend.service.UserService;
 import org.apache.hc.client5.http.auth.InvalidCredentialsException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -56,18 +54,13 @@ public class UserRestApi {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestParam String email,
-                                           @RequestParam String password,
-                                           @RequestParam String repeatedPassword,
-                                           @RequestParam String name,
-                                           @RequestParam String surname,
-                                           @RequestParam Integer points,
-                                           Model model) {
+    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+        System.out.println(request);
         try {
-            userService.register(email,password, repeatedPassword,name,surname,points);
+            userService.register(request.getEmail(),request.getPassword(),
+                    request.getRepeatedPassword(),request.getName(),request.getSurname(),0);
             return ResponseEntity.ok().body("User registered successfully");
         } catch (InvalidCredentialsException e) {
-            model.addAttribute("error", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
