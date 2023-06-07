@@ -11,6 +11,7 @@ import mk.ukim.finki.studentplatform_backend.service.CourseService;
 import mk.ukim.finki.studentplatform_backend.service.StudentCourseService;
 import mk.ukim.finki.studentplatform_backend.service.StudentEventService;
 import mk.ukim.finki.studentplatform_backend.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,7 +22,9 @@ import java.util.List;
 @RequestMapping("/students")
 public class StudentRestAPI {
 
+    @Autowired
     private StudentService studentService;
+    @Autowired
     private StudentCourseService studentCourseService;
     private StudentEventService studentEventService;
     private CourseService courseService;
