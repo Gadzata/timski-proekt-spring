@@ -13,12 +13,12 @@ public class Student extends User {
 
     String name;
     String surname;
-    Integer points;
+    Integer points = 0;
 
     public Student(String username, String password,String name, String surname, Integer points) {
         super(username, password);
         this.name = name;
         this.surname = surname;
-        this.points = 0;
+        this.points = points;
     }
 }
