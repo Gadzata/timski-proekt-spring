@@ -39,7 +39,6 @@ public class SecurityConfig {
                 .and()
                 .formLogin()
                 .failureUrl("/login?error=BadCredentials")
-                .defaultSuccessUrl("/courses", true)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
