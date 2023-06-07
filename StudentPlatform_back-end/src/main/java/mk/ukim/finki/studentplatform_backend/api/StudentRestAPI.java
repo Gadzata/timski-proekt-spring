@@ -93,6 +93,14 @@ public class StudentRestAPI {
 //        return studentCourseService.getCoursesByStudent(student);
 //    }
 
+    @GetMapping("/getActiveUser")
+    public Student getActiveUser(HttpServletRequest request) {
+        Student student = (Student) request.getSession().getAttribute("user");
+        if (student == null)
+            throw new UnauthorizedException();
+        return student;
+    }
+
     @GetMapping("/myCourses")
     public List<Course> showCoursesForStudent(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
