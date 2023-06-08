@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @Getter
@@ -22,11 +23,12 @@ public class DataInitializer {
     private MessageRepository messageRepository;
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
+    private final NoteRepository noteRepository;
 
     public DataInitializer(StudentRepository studentRepository, CourseRepository courseRepository,
                            StudentCourseRepository studentCourseRepository, EventRepository eventRepository,
                            StudentEventRepository studentEventRepository, MessageRepository messageRepository,
-                           UserRepository userRepository,BCryptPasswordEncoder passwordEncoder) {
+                           UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, NoteRepository noteRepository) {
         this.studentRepository = studentRepository;
         this.courseRepository = courseRepository;
         this.studentCourseRepository = studentCourseRepository;
@@ -35,6 +37,7 @@ public class DataInitializer {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.noteRepository = noteRepository;
     }
 
     @PostConstruct
@@ -48,7 +51,7 @@ public class DataInitializer {
         User user5 = new User("student5@students.finki.ukim.mk", passwordEncoder.encode("password5"));
 
         //Students
-        Student student1 = new Student(user.getEmail(),user.getPassword(),"Student1", "Student1Surname", 0);
+        Student student1 = new Student(user.getEmail(),user.getPassword(),"Student1", "Student1Surname", 7);
         studentRepository.save(student1);
 
 
@@ -145,7 +148,7 @@ public class DataInitializer {
         Event event1 = new Event("Event1", new Date(), new Date(),student1, course1, "Location1",4);
         eventRepository.save(event1);
 
-        Event event2 = new Event("Event2", new Date(), new Date(), student5, course1, "Location2",5);
+        Event event2 = new Event("Event2", new Date(), new Date(), student1, course1, "Location2",5);
         eventRepository.save(event2);
 
         Event event3 = new Event("Event3", new Date(), new Date(), student2, course3, "Location3",6);
@@ -167,7 +170,7 @@ public class DataInitializer {
         // Create a couple of StudentEvent objects
         StudentEvent studentEvent1 = new StudentEvent(student1, event1);
         studentEventRepository.save(studentEvent1);
-        StudentEvent studentEvent2 = new StudentEvent(student2, event1);
+        StudentEvent studentEvent2 = new StudentEvent(student1, event1);
         studentEventRepository.save(studentEvent2);
         StudentEvent studentEvent3 = new StudentEvent(student3, event1);
         studentEventRepository.save(studentEvent3);
@@ -192,8 +195,32 @@ public class DataInitializer {
         Message message7 = messageRepository.save(new Message(studentEvent2, "How are you feeling", new Date()));
         Message message8 = messageRepository.save(new Message(studentEvent2, "Are you ready", new Date()));
 
+        //String name, String type, byte[] data, Integer courseId
 
+        StringBuilder buffer = getMimeBuffer();
+        byte[] encodedAsBytes = buffer.toString().getBytes();
+        Note note1 = new Note("Note 1", "application/pdf", encodedAsBytes,1);
+        Note note2 = new Note("Note 2", "application/pdf", encodedAsBytes,2);
+        Note note3 = new Note("Note 3", "application/pdf", encodedAsBytes,2);
+        Note note4 = new Note("Note 4", "application/pdf", encodedAsBytes,3);
+        Note note5 = new Note("Note 5", "application/pdf", encodedAsBytes,4);
+        Note note6 = new Note("Note 6", "application/pdf", encodedAsBytes,1);
 
+        noteRepository.save(note1);
+        noteRepository.save(note2);
+        noteRepository.save(note3);
+        noteRepository.save(note4);
+        noteRepository.save(note5);
+        noteRepository.save(note6);
+
+    }
+
+    private static StringBuilder getMimeBuffer() {
+        StringBuilder buffer = new StringBuilder();
+        for (int count = 0; count < 10; ++count) {
+            buffer.append(UUID.randomUUID().toString());
+        }
+        return buffer;
     }
 }
 
