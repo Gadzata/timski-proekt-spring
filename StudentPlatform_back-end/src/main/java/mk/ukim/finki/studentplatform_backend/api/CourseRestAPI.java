@@ -7,22 +7,16 @@ import mk.ukim.finki.studentplatform_backend.exception.UnauthorizedException;
 import mk.ukim.finki.studentplatform_backend.message.ResponseFile;
 import mk.ukim.finki.studentplatform_backend.message.ResponseMessage;
 import mk.ukim.finki.studentplatform_backend.models.*;
-import mk.ukim.finki.studentplatform_backend.service.CourseService;
-import mk.ukim.finki.studentplatform_backend.service.EventService;
-import mk.ukim.finki.studentplatform_backend.service.NoteService;
-import mk.ukim.finki.studentplatform_backend.service.StudentService;
+import mk.ukim.finki.studentplatform_backend.service.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,13 +28,15 @@ public class CourseRestAPI {
     private final EventService eventService;
     private final NoteService noteService;
     private final StudentService studentService;
+    private final StudentCourseService studentCourseService;
 
     public CourseRestAPI(CourseService courseService, NoteService noteService, EventService eventService,
-                         StudentService studentService) {
+                         StudentService studentService, StudentCourseService studentCourseService) {
         this.courseService = courseService;
         this.noteService = noteService;
         this.eventService = eventService;
         this.studentService = studentService;
+        this.studentCourseService = studentCourseService;
     }
 
     //when a student clicks 'add new course' from the home page
@@ -53,6 +49,20 @@ public class CourseRestAPI {
     public Course getCourseById(@PathVariable Integer id) {
         try {
             return courseService.getCourseById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/enroll")
+    public StudentCourse enrollStudentInCourse(@PathVariable Integer id, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            Student student = (Student) request.getSession().getAttribute("user");
+            if (student == null)
+                throw new UnauthorizedException();
+            Course course = courseService.getCourseById(id);
+            return studentCourseService.saveStudentCourse(student, course);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
