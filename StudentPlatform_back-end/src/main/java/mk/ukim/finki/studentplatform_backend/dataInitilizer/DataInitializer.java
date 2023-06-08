@@ -51,20 +51,19 @@ public class DataInitializer {
         User user5 = new User("student5@students.finki.ukim.mk", passwordEncoder.encode("password5"));
 
         //Students
-        Student student1 = new Student(user.getEmail(),user.getPassword(),"Student1", "Student1Surname", 7);
+        Student student1 = new Student(user.getEmail(),user.getPassword(),"Angela", "Janevska", 10);
         studentRepository.save(student1);
 
-
-        Student student2 = new Student(user2.getEmail(),user2.getPassword(),"Student2", "Student2Surname", 5);
+        Student student2 = new Student(user2.getEmail(),user2.getPassword(),"Andrej", "Veljanovski", 2);
         studentRepository.save(student2);
 
-        Student student3 = new Student(user3.getEmail(), user3.getPassword(), "Student3", "Student3Surname", 7);
+        Student student3 = new Student(user3.getEmail(), user3.getPassword(), "Andrijan", "Gorenov", 7);
         studentRepository.save(student3);
 
-        Student student4 = new Student(user4.getEmail(), user4.getPassword(), "Student4", "Student4Surname", 10);
+        Student student4 = new Student(user4.getEmail(), user4.getPassword(), "Jana", "Micevska", 10);
         studentRepository.save(student4);
 
-        Student student5 = new Student(user5.getEmail(), user5.getPassword(), "Student5", "Student5Surname", 15);
+        Student student5 = new Student(user5.getEmail(), user5.getPassword(), "Galena", "Milenkoska", 15);
         studentRepository.save(student5);
 
         //Courses
@@ -141,20 +140,23 @@ public class DataInitializer {
         StudentCourse studentCourse2 = new StudentCourse(student2, course2);
         studentCourseRepository.save(studentCourse2);
 
+        StudentCourse studentCourse4 = new StudentCourse(student2, course3);
+        studentCourseRepository.save(studentCourse4);
+
         StudentCourse studentCourse3 = new StudentCourse(student3, course3);
         studentCourseRepository.save(studentCourse3);
 
         //Events
-        Event event1 = new Event("Event1", new Date(), new Date(),student1, course1, "Location1",4);
+        Event event1 = new Event("Discrete math auditory exercises", new Date(), new Date(),student1, course1, "Location1",4);
         eventRepository.save(event1);
 
-        Event event2 = new Event("Event2", new Date(), new Date(), student1, course1, "Location2",5);
+        Event event2 = new Event("Revision of last exam questions", new Date(), new Date(), student1, course1, "Location2",5);
         eventRepository.save(event2);
 
-        Event event3 = new Event("Event3", new Date(), new Date(), student2, course3, "Location3",6);
+        Event event3 = new Event("Exercises", new Date(), new Date(), student2, course3, "Location3",6);
         eventRepository.save(event3);
 
-        Event event4 = new Event("Event4", new Date(), new Date(), student2, course2, "Location4",7);
+        Event event4 = new Event("Exam preparations", new Date(), new Date(), student2, course2, "Location4",7);
         eventRepository.save(event4);
 
         // add more events with different dates
@@ -167,15 +169,20 @@ public class DataInitializer {
         Event event6 = new Event("Event6", now, nextWeek,student2, course2, "https://meet.google.com/niq-gpay-yxy",3);
         eventRepository.save(event6);
 
+        Event event7 = new Event("Final review of materials", now, nextWeek,student1, course2, "https://meet.google.com/niq-gpay-yxy",3);
+        eventRepository.save(event7);
+
         // Create a couple of StudentEvent objects
         StudentEvent studentEvent1 = new StudentEvent(student1, event1);
         studentEventRepository.save(studentEvent1);
-        StudentEvent studentEvent2 = new StudentEvent(student1, event1);
+        StudentEvent studentEvent2 = new StudentEvent(student1, event2);
         studentEventRepository.save(studentEvent2);
         StudentEvent studentEvent3 = new StudentEvent(student3, event1);
         studentEventRepository.save(studentEvent3);
         StudentEvent studentEvent4 = new StudentEvent(student2, event6);
         studentEventRepository.save(studentEvent4);
+        StudentEvent studentEvent5 = new StudentEvent(student1, event7);
+        studentEventRepository.save(studentEvent5);
 
 
         Calendar calendar = Calendar.getInstance();
